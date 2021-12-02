@@ -45,13 +45,6 @@ class PanelClient {
 		this.log("onClose('" + event.reason + "')<br>")
 	}
 
-	sendFrame3 (k) {
-		const frame = ((k % 10) + "").repeat(256)
-
-		//const frame = "aaaaaaaa55555555aaaaaaaa55555555aaaaaaaa55555555aaaaaaaa55555555aaaaaaaa55555555aaaaaaaa55555555aaaaaaaa55555555aaaaaaaa55555555aaaaaaaa55555555aaaaaaaa55555555aaaaaaaa55555555aaaaaaaa55555555aaaaaaaa55555555aaaaaaaa55555555aaaaaaaa55555555aaaaaaaa55555555"
-		this.sendFrame(frame)
-	}
-
 	display () {
 		const msg = {
 			frame: this._frame.asHexFrame(),
@@ -61,23 +54,27 @@ class PanelClient {
 		this.send(s)
 	}
 
-	sendFrame (frame) {
+	setBightness (v) {
 		const msg = {
-			frame: frame,
-			brightness: 0
+			brightness: v
 		}
 		const s = JSON.stringify(msg)
 		this.send(s)
 	}
 
 	send (s) {
-		this.log("sending: [" + s + "]")
+		//this.log("sending: [" + s + "]")
 		this._socket.send(s);
 	}
 
 	log (msg) {
 		const content = document.getElementById("content")
 		content.innerHTML += " " + msg + "<br>\n"
+	}
+
+	step () {
+		this._frame.randomize()
+		this.display()
 	}
 }
 
@@ -87,20 +84,14 @@ window.onkeydown= function(event) {
 	console.log("onkeydown ", k)
 
 	const client = window.panelClient
+
 	client._frame.randomize()
-	
 	client.display()
-	/*
-	if (Math.random() > 0.5) {
-		window.panelClient.sendFrame1()
-	} else {
-		window.panelClient.sendFrame2()
-	}	
-	*/
 }
 
 window.onload = function() {
 	window.panelClient = new PanelClient()
 	window.panelClient.run()
+	setInterval(() => { window.panelClient.step() }, 1000/60)
 }
 
