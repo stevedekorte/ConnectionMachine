@@ -1,51 +1,92 @@
+class PanelClient {
+	constructor () {
+		this._socket = null
+		//this._host = "cm2.local"
+		this._host = "192.168.4.185"
+		this._port = 13254
+	}
 
-function run() {
-	const content = document.getElementById("content")
-	const ip = "cm2.local"
-	const port = 13254
+	run () {
+		this.connect()
+		return this
+	}
 
-	//var socket = new WebSocket("ws://127.0.0.1:13254/socketserver", ["protocolOne", "protocolTwo"]);
-	const url = "ws://" + ip + ":" + port + "/"
-	var socket = new WebSocket(url);
+	url () {
+		const url = "ws://" + this._host + ":" + this._port + "/"
+		return url
+	}
 
-	log("new WebSocket('" + url + "')")
+	connect () {
+		this.log("new WebSocket('" + this.url() + "')")
+		const socket = new WebSocket(this.url())
+		socket.onopen = (event) => this.onOpen(event)
+		socket.onmessage = (event) => this.onMessage(event)
+		socket.onerror = (event) => this.onError(event)
+		socket.onclose =(event) => this.onClose(event)
+		return this
+	}
 
-	socket.onopen = function (event) {
-		log("onopen()")
-		const msg = {
-			frame: "aaaaaaaa55555555aaaaaaaa55555555aaaaaaaa55555555aaaaaaaa55555555aaaaaaaa55555555aaaaaaaa55555555aaaaaaaa55555555aaaaaaaa55555555aaaaaaaa55555555aaaaaaaa55555555aaaaaaaa55555555aaaaaaaa55555555aaaaaaaa55555555aaaaaaaa55555555aaaaaaaa55555555aaaaaaaa55555555"
-		}
-		const s = JSON.stringify(msg)
-		console.log("sending: [" + s + "]")
-		socket.send(s);
+	onOpen (event) {
+		this.log("onOpen()")
 	};
 
-	socket.onmessage = function(event) {
+	onMessage (event) {
 		const message = event.data
-		log("onmessage('" + message + "')")
+		this.log("onMessage('" + message + "')")
 	}
 
-	socket.onerror = function(event) {
-		log("onerror('" + event + "')")
+	onError (event) {
+		this.log("onError('" + event + "')")
 	}
 
-	socket.onclose = function(event) {
-		log("onclose('" + event.reason + "')<br>")
+	onClose (event) {
+		this.log("onClose('" + event.reason + "')<br>")
 	}
 
-	function log(msg) {
+	sendFrame1() {
+		const msg = {
+			frame: "0".repeat(256)
+		}
+	}
+
+	sendFrame2() {
+		const msg = {
+			frame: "aaaaaaaa55555555aaaaaaaa55555555aaaaaaaa55555555aaaaaaaa55555555aaaaaaaa55555555aaaaaaaa55555555aaaaaaaa55555555aaaaaaaa55555555aaaaaaaa55555555aaaaaaaa55555555aaaaaaaa55555555aaaaaaaa55555555aaaaaaaa55555555aaaaaaaa55555555aaaaaaaa55555555aaaaaaaa55555555",
+		}
+	}
+
+	sendFrame (frame) {
+		const msg = {
+			frame: frame
+		}
+		const s = JSON.stringify(msg)
+		this.send(s)
+	}
+
+	send (s) {
+		this.log("sending: [" + s + "]")
+		this._socket.send(s);
+	}
+
+	log (msg) {
+		const content = document.getElementById("content")
 		content.innerHTML += " " + msg + "<br>\n"
 	}
 
-	window.onkeydown= function(event) {
-		const k = event.keyCode
-		//socket.send("{ keyCode: " + k + " }");
-	}
+}
 
-	//socket.close();
+
+window.onkeydown= function(event) {
+	const k = event.keyCode
+	if (Math.random() > 0.5) {
+		window.panelClient.sendFrame1()
+	} else {
+		window.panelClient.sendFrame2()
+	}	
 }
 
 window.onload = function() {
-	run()
+	window.panelClient = new PanelClient()
+	window.panelClient.run()
 }
 

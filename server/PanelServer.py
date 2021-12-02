@@ -11,7 +11,8 @@ import json
 
 class PanelServer(object):
 	def __init__(self):
-		self.host = "cm2.local"
+		#self.host = "cm2.local"
+		self.host = "192.168.4.185"
 		self.port = 13254
 		self.server = None
 		self.panel = None
