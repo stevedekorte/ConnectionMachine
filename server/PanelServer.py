@@ -19,7 +19,7 @@ class PanelServer(object):
 		self.clientTally = 0
 
 	def setupPanel(self):
-		#self.panel = Panel()
+		self.panel = Panel()
 		pass
 
 	def run(self):
