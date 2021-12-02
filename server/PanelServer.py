@@ -54,7 +54,7 @@ class PanelServer(object):
 		print("client " + client["id"] + " disconnected")
 		
 	def onClientMessage(self, client, server, message):
-		print("client " + client["id"] + " sent: '" + message + "'")
+		#print("client " + client["id"] + " sent: '" + message + "'")
 		dict = json.loads(message)
 		#print("server received json: '" + str(dict) + "'")
 		if self.panel:
