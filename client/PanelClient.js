@@ -15,7 +15,9 @@ function run() {
 		const msg = {
 			frame: "aaaaaaaa55555555aaaaaaaa55555555aaaaaaaa55555555aaaaaaaa55555555aaaaaaaa55555555aaaaaaaa55555555aaaaaaaa55555555aaaaaaaa55555555aaaaaaaa55555555aaaaaaaa55555555aaaaaaaa55555555aaaaaaaa55555555aaaaaaaa55555555aaaaaaaa55555555aaaaaaaa55555555aaaaaaaa55555555"
 		}
-		socket.send(JSON.stringify(msg));
+		const s = JSON.stringify(msg)
+		console.log("sending: [" + s + "]")
+		socket.send(s);
 	};
 
 	socket.onmessage = function(event) {

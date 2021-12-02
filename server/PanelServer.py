@@ -58,10 +58,10 @@ class PanelServer(object):
 		#print("server received json: '" + str(dict) + "'")
 		if self.panel:
 			if "frame" in dict:
-				self.panel.setHexFrame(dict.frame)
+				self.panel.setHexFrame(dict["frame"])
 
 			if "brightness" in dict:
-				self.panel.setBrightness(dict.brightness)
+				self.panel.setBrightness(dict["brightness"])
 
 	
 	def sendClientMessage(self, client, message):
