@@ -8,7 +8,7 @@
 	<link href="./Fonts/Helvetica/fonts.css" rel="stylesheet" type="text/css">
 	<link href="style.css" rel="stylesheet" type="text/css">
 	<!--
-	<script type="text/javascript" src="typing.js"></script>
+	<script type="text/javascript" src="PanelClient.js"></script>
 	-->
 
 	<style>
@@ -34,7 +34,7 @@
 
 	socket.onopen = function (event) {
 		log("onopen()")
-		socket.send("{ frame: \"xxx\" }");
+		socket.send("{ \"frame\": \"xxx\" }");
 	};
 
 	socket.onmessage = function(event) {
@@ -56,7 +56,7 @@
 
 	window.onkeydown= function(event) {
 		const k = event.keyCode
-		socket.send("{ keyCode: " + k + " }");
+		//socket.send("{ keyCode: " + k + " }");
     }
 
 	//socket.close();
