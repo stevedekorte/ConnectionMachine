@@ -1,10 +1,20 @@
-class PanelClient {
+class LedDisplay {
 	constructor () {
 		this._socket = null
 		//this._host = "cm2.local"
 		this._host = "192.168.4.185"
 		this._port = 13254
 		this._frame = new LedFrame()
+		this._delegate = null
+	}
+
+	setDelegate (obj) {
+		this._delegate = obj
+		return this
+	}
+
+	frame () {
+		return this._frame
 	}
 
 	run () {
@@ -30,6 +40,7 @@ class PanelClient {
 
 	onOpen (event) {
 		this.log("onOpen()")
+		this._delegate.onLedDisplayOpen(this)
 	};
 
 	onMessage (event) {
@@ -46,12 +57,16 @@ class PanelClient {
 	}
 
 	display () {
-		const msg = {
-			frame: this._frame.asHexFrame(),
-			brightness: 0
+		const json = {
+			frame: this._frame.asHexFrame()		
 		}
-		const s = JSON.stringify(msg)
-		this.send(s)
+		const s = JSON.stringify(json)
+		this.rawSend(s)
+	}
+
+	clear () {
+		this.frame().clear()
+		this.display()
 	}
 
 	setBightness (v) {
@@ -59,39 +74,18 @@ class PanelClient {
 			brightness: v
 		}
 		const s = JSON.stringify(msg)
-		this.send(s)
+		this.rawSend(s)
 	}
 
-	send (s) {
+	rawSend (s) {
 		//this.log("sending: [" + s + "]")
 		this._socket.send(s);
 	}
 
 	log (msg) {
-		const content = document.getElementById("content")
-		content.innerHTML += " " + msg + "<br>\n"
+		console.log(msg)
+		//const content = document.getElementById("content")
+		//content.innerHTML += " " + msg + "<br>\n"
 	}
-
-	step () {
-		this._frame.randomize()
-		this.display()
-	}
-}
-
-
-window.onkeydown= function(event) {
-	const k = event.keyCode
-	console.log("onkeydown ", k)
-
-	const client = window.panelClient
-
-	client._frame.randomize()
-	client.display()
-}
-
-window.onload = function() {
-	window.panelClient = new PanelClient()
-	window.panelClient.run()
-	setInterval(() => { window.panelClient.step() }, 1000/60)
 }
 
