@@ -1,6 +1,7 @@
 
 import random
 #import secrets
+import math
 
 class LedFrame:
     def __init__(self): # constructor method
