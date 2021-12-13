@@ -10,7 +10,47 @@ class Animation {
         this._compositeStyle = "or"
         this._owner = null
         this._isPaused = false
+        this._app = null
+        this._startKey = "A"
+        this._endKey = "S"
         return this
+    }
+
+    compositeStyle () {
+        return this._compositeStyle
+    }
+
+    setStartKey (k) {
+        this._startKey = k
+        return this
+    }
+
+    setEndKey (k) {
+        this._endKey = k
+        return this
+    }
+
+    setTMax (t) {
+        this._tMax = t
+        return this
+    }
+
+    frame () {
+        return this._frame
+    }
+
+    setOwner (owner) {
+        this._owner = owner
+        return this
+    }
+
+    start () {
+        this._t = 0
+        this._owner.addActiveAnimation(this)
+    }
+
+    end () {
+        this.didComplete()
     }
 
     step () {
@@ -25,7 +65,7 @@ class Animation {
     }
 
     didComplete () {
-        this._owner.didCompleteAnimation(this)
+        this._owner.removeActiveAnimation(this)
     }
     
     pause () {
@@ -45,9 +85,17 @@ class Animation {
     }
 
     onKeyDown (event) {
+        const c = String.fromCharCode(event.keyCode)
+        if (c === this._startKey) {
+            this.start()
+        }
     }
 
     onKeyUp (event) {
+        const c = String.fromCharCode(event.keyCode)
+        if (c === this._endKey) {
+            this.end()
+        }
     }
 }
 

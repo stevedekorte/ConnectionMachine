@@ -5,17 +5,41 @@
 class VizApp extends LedApp {
     constructor () {
         super()
+        this.setFps(60)
+
         this.registerForKeyboardInput()
+
+        this._availableAnimations = []
+        this._activeAnimations = []
+
+        this.setupAnimations()
         return this
     }
 
+    setupAnimations () {
+        this.addAvailableAnimation(new RandomAnimation())
+    }
+
+    availableAnimations () {
+        return this._availableAnimations
+    }
+
+    activeAnimations () {
+        return this._activeAnimations
+    }
 
     step () {
-        /*
-        this._animations.forEach((animation) => {
-            animation.step()
+        super.step()
+        
+        this._activeAnimations.slice().forEach((anim) => {
+            anim.step()
         })
-        */
+
+        this.frame().clear()
+
+        this._activeAnimations.forEach((anim) => {
+            anim.compositeToFrame(this.frame())
+        })
     }
 
     didCompleteAnimation (anAnimation) {
@@ -23,6 +47,38 @@ class VizApp extends LedApp {
     }
 
     onKeyDown (event) {
+        const k = event.keyCode
+        this._availableAnimations.forEach((a) => { a.onKeyDown(event) })
+    }
+
+    onKeyUp (event) {
+        const k = event.keyCode
+        this._availableAnimations.forEach((a) => { a.onKeyUp(event) })
+    }
+
+    // available
+
+    addAvailableAnimation (anAnimation) {
+        anAnimation.setOwner(this)
+        this.availableAnimations().push(anAnimation)
+    }
+
+    // active
+
+    addActiveAnimation (anAnimation) {
+        anAnimation.setOwner(this)
+        this.activeAnimations().push(anAnimation)
+    }
+
+    removeActiveAnimation (anAnimation) {
+        this.activeAnimations().remove(anAnimation)
+    }
+}
+
+
+
+/*
+   onKeyDown (event) {
         const k = event.keyCode
         console.log("k = ", k)
         this.applyXYFunc((x, y) => {
@@ -33,11 +89,7 @@ class VizApp extends LedApp {
     onKeyUp (event) {
         const k = event.keyCode
         this.frame().setAllBitsTo(0)
-        /*
-        this.applyXYFunc((x, y) => {
-            return (x + y) % keyCode === 0
-        })
-        */
+
     }
 
     applyXYFunc (func) {
@@ -56,7 +108,4 @@ class VizApp extends LedApp {
             }
         }
     }
-}
-
-
-
+    */

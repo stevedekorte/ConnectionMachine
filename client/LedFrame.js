@@ -1,5 +1,14 @@
 
 
+Array.prototype.remove = function(v) {
+  const i = this.indexOf(v);
+  if (i > -1) {
+    this.splice(i, 1);
+  }
+  return this;
+}
+
+
 class LedFrame {
     constructor () {
         this._xmax = 32
@@ -129,7 +138,7 @@ class LedFrame {
         const bits1 = this.bits
         const bits2 = frame.bits
         const size = bits1.length
-        for (i = 0; i < size; i++) {
+        for (let i = 0; i < size; i++) {
             bits1[i] = bits1[i] || bits2[i]
         }
     }

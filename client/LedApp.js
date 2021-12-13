@@ -5,6 +5,8 @@
 class LedApp {
     constructor () {
         this._fps = 30
+        this._frame = new LedFrame()
+
         this._display = new LedDisplay()
         this._display.setDelegate(this)
 
@@ -12,7 +14,7 @@ class LedApp {
         this._htmlDisplay.setup()
 
         this._needsDisplay = true
-        this._animations = []
+
 
         /*
         this.keyboard = Keyboard()
@@ -35,9 +37,7 @@ class LedApp {
 
     step () {
         this.setNeedsDisplay(true)
-        this._animations.forEach((animation) => {
-            animation.step()
-        })
+
     }
 
     didCompleteAnimation (anAnimation) {
@@ -51,7 +51,7 @@ class LedApp {
     }
 
     frame () {
-        return this._display.frame()
+        return this._frame
     }
 
     beginFrame () {
@@ -60,10 +60,13 @@ class LedApp {
 
     endFrame () {
         if (this._needsDisplay) {
-            this._display.display()
+            if (this._display.isConnected()) {
+                this._display.frame().copy(this.frame())
+                this._display.render()
+            }
 
-            this._htmlDisplay.frame().copy(this._display.frame())
-            this._htmlDisplay.display()
+            this._htmlDisplay.frame().copy(this.frame())
+            this._htmlDisplay.render()
         }
         
         this._endTime = new Date().getTime()
@@ -90,14 +93,14 @@ class LedApp {
     run () {
         this._display.connect() // after connect, we'll call frameStep to start running steps
         this._htmlDisplay.onWindowResize()
+
+        // might need to wait for connect if we need to get frame dimensions first?
+        this.frameStep()
+        this._htmlDisplay.layout()
     }
 
     onLedDisplayOpen () {
         this._display.clear()
-        //this.frame().randomize()
-
-        this.frameStep()
-        this._htmlDisplay.layout()
     }
 
     registerForKeyboardInput () {
@@ -106,11 +109,10 @@ class LedApp {
     }
 
     onKeyDown (event) {
-        this._animations.forEach(a => a.onKeyDown(event))
     }
 
     onKeyUp (event) {
-        this._animations.forEach(a => a.onKeyUp(event))
+
     }
 }
 

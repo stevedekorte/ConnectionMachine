@@ -45,7 +45,7 @@ class HtmlDisplay {
 			}
 			this._element.appendChild(row)
 		}
-		this.display()
+		this.render()
 	}
 
 
@@ -53,7 +53,7 @@ class HtmlDisplay {
 		return this._rows[y][x]
 	}
 
-	display () {
+	render () {
 		const xmax = this.frame().width()
 		const ymax = this.frame().height()
 		for (let y = 0; y < ymax; y++) {
@@ -71,7 +71,7 @@ class HtmlDisplay {
 
 	clear () {
 		this.frame().clear()
-		this.display()
+		this.render()
 	}
 
 	setBightness (v) {
@@ -89,12 +89,12 @@ class HtmlDisplay {
 
 	log (msg) {
 		const content = document.getElementById("content")
-		content.innerHTML += " " + msg + "<br>\n"
+		content.innerHTML += " " + msg + "\n"
 	}
 
 	step () {
 		this._frame.randomize()
-		this.display()
+		this.render()
 	}
 
 	registerForResize () {

@@ -13,6 +13,7 @@ class BtcApp extends LedApp {
         this._utxs = []
         this._count = 0
         this._needsRender = true
+
         return this
     }
 
@@ -106,7 +107,9 @@ class BtcApp extends LedApp {
 	onUnconfirmedTxMessage (json) {
         //this._count += json.x.inputSum // satoshis
         this._needsRender = true
-	}
+        //this.frame().clear()
+    }
+
 }
 
 

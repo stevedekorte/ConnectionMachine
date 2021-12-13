@@ -6,6 +6,16 @@ class LedDisplay {
 		this._port = 13254
 		this._frame = new LedFrame()
 		this._delegate = null
+		this._isConnected = false
+	}
+
+	isConnected () {
+		return this._isConnected
+	}
+
+	setIsConnected (bool) {
+		this._isConnected = bool
+		return this
 	}
 
 	setDelegate (obj) {
@@ -40,6 +50,7 @@ class LedDisplay {
 
 	onOpen (event) {
 		this.log("onOpen()")
+		this.setIsConnected(true)
 		this._delegate.onLedDisplayOpen(this)
 	};
 
@@ -50,23 +61,27 @@ class LedDisplay {
 
 	onError (event) {
 		this.log("onError('" + event + "')")
+		this.setIsConnected(false)
 	}
 
 	onClose (event) {
-		this.log("onClose('" + event.reason + "')<br>")
+		this.log("onClose('" + event.reason + "')")
+		this.setIsConnected(false)
 	}
 
-	display () {
-		const json = {
-			frame: this._frame.asHexFrame()		
+	render () {
+		if (this.isConnected()) {
+			const json = {
+				frame: this._frame.asHexFrame()		
+			}
+			const s = JSON.stringify(json)
+			this.rawSend(s)
 		}
-		const s = JSON.stringify(json)
-		this.rawSend(s)
 	}
 
 	clear () {
 		this.frame().clear()
-		this.display()
+		this.render()
 	}
 
 	setBightness (v) {

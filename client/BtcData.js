@@ -12,14 +12,6 @@ class BtcData {
 		this._newBlocks = []
 	}
 
-	blockHeight () {
-		const lastBlock = this._newBlocks[this._newBlocks.length - 1]
-		if (lastBlock) {
-			return lastBlock.x.height
-		}
-		return 0
-	}
-
 	newBlocks () {
 		return this._newBlocks
 	}
@@ -117,13 +109,7 @@ class BtcData {
 
 	onUnconfirmedTxMessage (json) {
 		//this.log("onUnconfirmedTxMessage('" + JSON.stringify(json) + "')")
-		this.log("onUnconfirmedTxMessage('')")
-
-		let inputSum = 0
-		json.x.inputs.forEach((input) => {
-			inputSum += input.prev_out.value
-		})
-		json.x.inputSum = inputSum
+		this.log("onUnconfirmedTxMessage('" + json.x.tx_index + "')")
 
 		this._utxDict[json.x.tx_index] = json
 

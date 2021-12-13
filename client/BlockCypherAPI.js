@@ -281,7 +281,6 @@ class BlockCypherAPI {
 
 	ping () {
 		this.sendJson({ "event": "ping" })
-
 	}
 
 	// block subs
@@ -306,7 +305,7 @@ class BlockCypherAPI {
 	log (msg) {
 		console.log("BlockChyperAPI:", msg)
 		//const content = document.getElementById("content")
-		//content.innerHTML += " " + msg + "<br>\n"
+		//content.innerHTML += " " + msg + "\n"
 	}
 }
 
