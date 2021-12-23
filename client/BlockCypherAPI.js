@@ -185,8 +185,8 @@ class BlockCypherAPI {
 	onOpen (event) {
 		this.log("onOpen()")
 		this.ping()
-		this.subscribeNewBlocks()
-		this.subscribeUnconfirmedTxs()
+		//this.subscribeNewBlocks()
+		//this.subscribeUnconfirmedTxs()
 		//this.startKeepAlive()
 	};
 

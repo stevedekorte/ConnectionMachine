@@ -12,7 +12,23 @@ class Animation {
         this._isPaused = false
         this._app = null
         this._startKey = "A"
+        this._endKey = null
         this._endKey = "S"
+        this._allowsMany = true
+        return this
+    }
+
+    allowsMany () {
+        return this._allowsMany
+    }
+
+    setAllowsMany (aBool) {
+        this._allowsMany = aBool
+        return this
+    }
+
+    setCompositeStyle (aStyle) {
+        this._compositeStyle = aStyle
         return this
     }
 
@@ -46,7 +62,14 @@ class Animation {
 
     start () {
         this._t = 0
-        this._owner.addActiveAnimation(this)
+        let instance = this
+
+        if (this.allowsMany()) {
+            instance = new this.__proto__.constructor()
+            instance.setCompositeStyle(this.compositeStyle()) // TODO: something cleaner
+        }
+
+        this._owner.addActiveAnimation(instance)
     }
 
     end () {
@@ -54,10 +77,14 @@ class Animation {
     }
 
     step () {
-        if (this._t < this._tMax) {
+        if (this._tMax === null || this._t < this._tMax) {
             this._t ++
-            this.frame().randomize()
+            this.draw()
         }
+    }
+
+    draw () {
+
     }
 
     isDone () {
@@ -87,7 +114,25 @@ class Animation {
     onKeyDown (event) {
         const c = String.fromCharCode(event.keyCode)
         if (c === this._startKey) {
+
+            if (event.getModifierState("Control")) {
+                this.setCompositeStyle("or")
+            }
+
+            if (event.getModifierState("Alt")) {
+                this.setCompositeStyle("xor")
+            }
+
+            if (event.getModifierState("Shift")) {
+                this.setCompositeStyle("and")
+            }
+
+
             this.start()
+        }
+
+        if (c === this._endKey) {
+            this.end()
         }
     }
 

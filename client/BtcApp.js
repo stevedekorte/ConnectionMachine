@@ -38,42 +38,23 @@ class BtcApp extends LedApp {
 
         const blocks = this._btcData.blocks()
 
+        this.display().setBrightness(15)
+
         for (let i = 0; i < ymax; i++) {
             this.clearXLine(i)
             if (i < blocks.length) {
                 const block = blocks[i]
                 const btcTransacted = block.total / 100000000;
                 const v = Math.floor(btcTransacted)
-                this.drawBitsForNumberAt(0, i, v)
+                this.frame().drawBitsForNumberAt(0, i, v)
             }
         }
-
     }
 
     clearXLine (y) {
         const xmax = this.frame().width()
         for (let x = 0; x < xmax; x++) {
             this.frame().setBit(x, y, 0)
-        }
-    }
-
-    drawBitsForNumberAt (x, y, aNumber) {
-        const bitsString = aNumber.toString(2).split('').reverse().join('');
-
-        const xmax = this.frame().width()
-        const ymax = this.frame().height()
-
-        if (y >= ymax) {
-            return 
-        }
-
-        for (let i = 0; i < bitsString.length; i++) {
-            const xx = x + i
-            if (xx >= xmax) {
-                break
-            }
-            const v = bitsString[i] === "1" ? 1 : 0
-            this.frame().setBit(xx, y, v)
         }
     }
 
@@ -99,7 +80,6 @@ class BtcApp extends LedApp {
     */
 
     onBlockMessage (json) {
-
         this._count = 0
         this._needsRender = true
 	}

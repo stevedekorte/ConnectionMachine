@@ -6,7 +6,7 @@ class HtmlDisplay {
 		this._frame = new LedFrame()
 		this._delegate = null
 		this._rows = []
-
+		this._brightness = 1
 		this.registerForResize()
 	}
 
@@ -39,12 +39,15 @@ class HtmlDisplay {
 				item.style.display = "inline-block"
 				item.style.margin = "0px"
 				item.style.padding = "0px"
+				item.style.color = "#ff0000"
+				//item.style.transition = "all 0s"
 				//item.innerHTML = x + "." + y
 				row.appendChild(item)
 				rowArray.push(item)
 			}
 			this._element.appendChild(row)
 		}
+		this.setBrightness(1)
 		this.render()
 	}
 
@@ -54,6 +57,9 @@ class HtmlDisplay {
 	}
 
 	render () {
+		const min = 0.8
+		this._element.style.opacity =  min + (this._brightness/15)*(1 - min)
+
 		const xmax = this.frame().width()
 		const ymax = this.frame().height()
 		for (let y = 0; y < ymax; y++) {
@@ -62,8 +68,10 @@ class HtmlDisplay {
 				const v = this.frame().getBit(x, y)
 				if (v === 1) {
 					item.style.color = "#ff0000"
+					//item.style.opacity = min + (this._brightness/15)*(1 - min)
 				} else {
 					item.style.color = "#440000"
+					//item.style.opacity = 0.1
 				}
 			}
 		}
@@ -74,17 +82,16 @@ class HtmlDisplay {
 		this.render()
 	}
 
-	setBightness (v) {
-		const msg = {
-			brightness: v
-		}
-		const s = JSON.stringify(msg)
-		this.rawSend(s)
+	setBrightness (v) { // max is 15
+		v = Math.round(v)
+		if (v > 15) { v = 15 }
+		if (v < 0) { v = 0 }
+		this._brightness = v
+		return this
 	}
 
-	rawSend (s) {
-		//this.log("sending: [" + s + "]")
-		this._socket.send(s);
+	brightness () {
+		return this._brightness
 	}
 
 	log (msg) {

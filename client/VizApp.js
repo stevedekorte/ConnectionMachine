@@ -9,15 +9,34 @@ class VizApp extends LedApp {
 
         this.registerForKeyboardInput()
 
+        this._animationClasses = [
+            RandomAnimation, 
+            LineDownAnimation, 
+            LineUpAnimation, 
+            LineLeftAnimation, 
+            LineRightAnimation, 
+            DiagonalAnimation, 
+            AltAnimation,
+            ChristmasTreeMask,
+            ParticlesAnimation
+        ]
         this._availableAnimations = []
         this._activeAnimations = []
 
         this.setupAnimations()
+
         return this
     }
 
+    animationClasses () {
+        return this._animationClasses
+    }
+
     setupAnimations () {
-        this.addAvailableAnimation(new RandomAnimation())
+        this.animationClasses().forEach((aClass) => {
+            this.addAvailableAnimation(new aClass())
+        })
+        
     }
 
     availableAnimations () {
@@ -30,10 +49,12 @@ class VizApp extends LedApp {
 
     step () {
         super.step()
-        
+
         this._activeAnimations.slice().forEach((anim) => {
             anim.step()
         })
+
+        this.display().setBrightness(0)
 
         this.frame().clear()
 
@@ -48,12 +69,12 @@ class VizApp extends LedApp {
 
     onKeyDown (event) {
         const k = event.keyCode
-        this._availableAnimations.forEach((a) => { a.onKeyDown(event) })
+        this.availableAnimations().forEach((a) => { a.onKeyDown(event) })
     }
 
     onKeyUp (event) {
         const k = event.keyCode
-        this._availableAnimations.forEach((a) => { a.onKeyUp(event) })
+        this.availableAnimations().forEach((a) => { a.onKeyUp(event) })
     }
 
     // available
@@ -65,9 +86,15 @@ class VizApp extends LedApp {
 
     // active
 
+    hasAnimation (anAnimation) {
+        return this.activeAnimations().indexOf(anAnimation) !== -1
+    }
+
     addActiveAnimation (anAnimation) {
-        anAnimation.setOwner(this)
-        this.activeAnimations().push(anAnimation)
+        if (!this.hasAnimation(anAnimation)) {
+            anAnimation.setOwner(this)
+            this.activeAnimations().push(anAnimation)
+        }
     }
 
     removeActiveAnimation (anAnimation) {

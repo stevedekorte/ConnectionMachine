@@ -7,6 +7,7 @@ class LedDisplay {
 		this._frame = new LedFrame()
 		this._delegate = null
 		this._isConnected = false
+		this._brightness = 1
 	}
 
 	isConnected () {
@@ -72,7 +73,8 @@ class LedDisplay {
 	render () {
 		if (this.isConnected()) {
 			const json = {
-				frame: this._frame.asHexFrame()		
+				frame: this._frame.asHexFrame(),
+				brightness: this._brightness
 			}
 			const s = JSON.stringify(json)
 			this.rawSend(s)
@@ -84,12 +86,16 @@ class LedDisplay {
 		this.render()
 	}
 
-	setBightness (v) {
-		const msg = {
-			brightness: v
-		}
-		const s = JSON.stringify(msg)
-		this.rawSend(s)
+	setBrightness (v) { // max is 15
+		v = Math.round(v)
+		if (v > 15) { v = 15 }
+		if (v < 0) { v = 0 }
+		this._brightness = v
+		return this
+	}
+
+	brightness () {
+		return this._brightness
 	}
 
 	rawSend (s) {

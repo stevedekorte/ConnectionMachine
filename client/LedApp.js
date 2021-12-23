@@ -25,6 +25,10 @@ class LedApp {
         return this
     }
 
+    display () {
+        return this._display
+    }
+
     setNeedsDisplay (aBool) {
         this._needsDisplay = aBool
         return this
@@ -66,6 +70,7 @@ class LedApp {
             }
 
             this._htmlDisplay.frame().copy(this.frame())
+            this._htmlDisplay.setBrightness(this._display.brightness())
             this._htmlDisplay.render()
         }
         
