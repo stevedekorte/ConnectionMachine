@@ -328,6 +328,8 @@ class Particle extends Thing {
         //this._acceleration = new Point2d()
         this._animation = null
         this._stopped = false
+        this._t = 0
+        this._tMax = 2000
         return this
     }
 
@@ -361,11 +363,32 @@ class Particle extends Thing {
     }
 
     step () {
+        this._t ++
+        if (this._t > this._tMax) {
+            this.animation().removeParticle(this)
+            return
+        }
+
         const pos = this.position()
         pos.add(this.velocity())
 
+        if (pos.y() < this.animation().frame().height() - 2) {
+            this.drift()
+        }
+
         if (!pos.rounded().equals(this.intPosition())) {
             this.updateIntPosition()
+        }
+    }
+
+    drift () {
+        const pos = this.position()
+        if (Math.random() < 0.01) {
+            if (Math.random() < 0.5) {
+                pos.setX(pos.x() + 1)
+            } else {
+                pos.setX(pos.x() - 1)
+            }
         }
     }
 
@@ -377,37 +400,13 @@ class Particle extends Thing {
         
         let collision = this.animation().hasParticleAtPoint(np)
 
-        //let collision = this.frame().getBit(np.x(), np.y()) === 1
-
-        //console.log(np.x() + " " + np.y() + " bit " + collision)
-
-        if (collision) {
-            console.log("collision")
-        }
-
-
-        if (np.y() === ymax - 1) {
-            console.log(np.x() + " " + np.y() + " bit " + collision)
-            let c = this.frame().getBit(np.x(), np.y())
-            this.animation().hasParticleAtPoint(np)
-        }
-
         if (np.y() === ymax ) {
             collision = true
         }
 
-        /*
-            if (Math.random() < 0.1) {
-                if (Math.random() < 0.5) {
-                    pos.setX(pos.x() + 1)
-                } else {
-                    pos.setX(pos.x() - 1)
-                }
-            }
-        */
 
         if (collision) {
-            this.velocity().setX(0).setY(0)
+            //this.velocity().setX(0).setY(0)
             pos.copy(this.intPosition())
         } else {
             this.intPosition().copy(np)
@@ -426,22 +425,26 @@ class ParticlesAnimation extends Animation {
         this.setTMax(null)
         this.setStartKey("P")
         this.setEndKey("O")
-        this.setAllowsMany(true)
+        this.setAllowsMany(false)
         this._particleCount = 1
         this._particles = []
         this._xmax = 32
         this.setup()
+        this._newParticlePeriod = 30
         return this
     }
 
-    hasParticleAtPoint (aPoint) {
+    hasParticleAtPoint (np) {
+        return this.frame().getBit(np.x(), np.y()) === 1
+        /*
         for (let i = 0; i < this.particles(); i ++) {
             const p = this.particles()[i]
-            if (p.intPosition().equals(aPoint)) {
+            if (p.intPosition().equals(np)) {
                 return true
             }
         }
         return false
+        */
     }
 
     onKeyDown(e) {
@@ -464,7 +467,6 @@ class ParticlesAnimation extends Animation {
         for (let i = 0; i < this._particleCount; i++) {
             this.newParticle()
         }
-        this.particles().forEach(p => this.placeParticle(p))
     }
 
     newParticle() {
@@ -476,10 +478,22 @@ class ParticlesAnimation extends Animation {
     }
 
     placeParticle(p) {
-        const x = Math.floor(Math.random() * this.xmax())
-        //p.position().setX(x)
-        p.position().setY(0 - Math.random() * 3)
+        const x = Math.round(Math.random() * 100000) % this.xmax()
+        p.position().setX(x)
+        p.position().setY(Math.round(0 - Math.random() * 6))
         p.velocity().setY(0.1 * (Math.random() * 0.5 + 0.5))
+    }
+
+    step () {
+        super.step()
+        if (this._t % this._newParticlePeriod === 0) {
+            this.newParticle()
+        }
+    }
+
+    removeParticle (p) {
+        this._particles.remove(p)
+        return this
     }
 
     draw() {
@@ -491,18 +505,20 @@ class ParticlesAnimation extends Animation {
         this.particles().forEach((p) => {
             const pos = p.intPosition()
             this.frame().setBit(pos.x(), pos.y(), 1)
-            //console.log("bit " + pos.x() + " " + pos.y())
         })
-    
-        console.log("trueBitCount: ", this.frame().trueBitCount())
-        
-        if (this.frame().getBit(0, 31)) {
-            //console.log("bit 0,31: " + this.frame().getBit(0, 31))
-        }
 
         this.particles().slice().forEach((p) => {
             p.step()
         })
+    }
+
+    onKeyDown (event) {
+        super.onKeyDown(event)
+
+        const c = String.fromCharCode(event.keyCode)
+        if (c === "I") {
+            this.setup()
+        }
     }
 }
 
