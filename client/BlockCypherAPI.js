@@ -23,12 +23,9 @@ class BlockCypherAPI {
 		this._utxsDict = {}
 		this._blocks = []
 
-		this._token = null //"f7676bb4292e4a159d33f93f78ef6d6a" 
+		this._token = "f7676bb4292e4a159d33f93f78ef6d6a" 
 	}
 
-	blocks () {
-		return this._blocks
-	}
 
 	updateBlocks () {
 		const blocks = Object.values(this._blocksDict)
@@ -64,15 +61,15 @@ class BlockCypherAPI {
 		return this
 	}
 
-	blockHeight () {
-		return 1
-	}
-
 	/*
 	hasBlockHash (blockHash) {
 
 	}
 	*/
+
+	blocks () {
+		return this._blocks
+	}
 
 	getBlockForHash (blockHash) {
 		return this._blocksDict[blockHash]
@@ -92,7 +89,13 @@ class BlockCypherAPI {
 	}
 
 	connect () {
+		this._fetchPeriod = 1000 * 60 * 5 // once per five minutes
+		this.fetch()
+	}
+
+	fetch () {
 		const url = "https://api.blockcypher.com/v1/btc/main" + this.tokenComponent()
+		console.log("fetch " + url)
 		const request = new XMLHttpRequest();
 		request.responseType = "";
 		request.open('GET', url, true);
@@ -101,6 +104,9 @@ class BlockCypherAPI {
 			if (request.readyState === 4 && request.status === 200) {
 				const json = JSON.parse(request.responseText)
 				this.requestBlock(json.hash)
+				if (this._fetchPeriod) {
+					setTimeout(() => { this.fetch() }, this._fetchPeriod)
+				}
 			}
 		}
 		request.onerror =  (event) => {
@@ -111,13 +117,21 @@ class BlockCypherAPI {
 		}
 	}
 
-	requestBlock (blockHash) {
-		console.log("requestBlock(" + blockHash + ")")
+	hasBlock (blockHash) {
 		const block = this.getBlockForHash(blockHash)
-		if (block) {
-			console.log("requesting already loaded block")
+		if (block) { 
+			return true 
+		}
+		return false
+	}
+
+	requestBlock (blockHash) {
+		if (this.hasBlock(blockHash)) {
+			console.log(" already loaded block " + blockHash)
 			return this
 		}
+		console.log("requestBlock(" + blockHash + ")")
+
 		const url = "https://api.blockcypher.com/v1/btc/main/blocks/" + blockHash + this.tokenComponent()
 		const request = new XMLHttpRequest();
 		request.responseType = "";
@@ -136,6 +150,8 @@ class BlockCypherAPI {
 			}, 3000)
 		}
 	}
+
+	// ----------------------------------------------------------
 
 	requestTx (txHash) {
 		const url = "https://api.blockcypher.com/v1/btc/main/txs/" + txHash + this.tokenComponent()
@@ -243,7 +259,7 @@ class BlockCypherAPI {
 				this.requestBlock(json.prev_block)
 			}, 1000)
 		} else {
-			this.webSocketsConnect()
+			//this.webSocketsConnect()
 		}
 
 	}

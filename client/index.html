@@ -12,12 +12,13 @@
 	<script type="text/javascript" src="HtmlDisplay.js"></script>
 	<script type="text/javascript" src="Animation.js"></script>
 	<script type="text/javascript" src="RandomAnimation.js"></script>
-
+<!--
+	<script type="module" src="./main.js"></script>
+-->
 	<script type="text/javascript" src="BlockCypherAPI.js"></script>
+	<script type="text/javascript" src="BlockChainAPI.js"></script>
 	<script type="text/javascript" src="BtcApp.js"></script>
-
-	<script type="text/javascript" src="VizApp.js"></script>
-
+	<script  type="text/javascript" src="VizApp.js"></script>
 
 	<style>
 		html, body {
@@ -46,8 +47,10 @@
 
 <script>
 	window.onload = function() {
-		window.app = new VizApp()
-		//window.app = new BtcApp()
+		//window.app = new SnowflakeApp()
+		//window.app = new LedApp()
+		//window.app = new VizApp()
+		window.app = new BtcApp()
 		window.app.run()
 	}
 </script>

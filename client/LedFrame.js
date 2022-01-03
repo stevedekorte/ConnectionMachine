@@ -74,7 +74,7 @@ class LedFrame {
     randomize () {
         const count = this.ledCount()
         for (let i = 0; i < count; i++) {
-            this._bits[i] = Math.round(Math.random()) * Math.round(Math.random())* Math.round(Math.random())
+            this._bits[i] = Math.round(Math.random()) * Math.round(Math.random()) //* Math.round(Math.random())
         }
     }
 
@@ -85,7 +85,7 @@ class LedFrame {
 
     addOneRandomOnBit () {
         const i = Math.floor(Math.random() * this.ledCount())
-        this._bits[i] = Math.round(Math.random())
+        this._bits[i] = Math.round(Math.random() * Math.random())
     }
 
     asHexFrame () {
@@ -148,7 +148,13 @@ class LedFrame {
     setXorBit (x, y, v) {
         const i = this.index_for_xy(x, y)
         const cv = this._bits[i]
-        this._bits[i] = v ^ cv
+        this._bits[i] = v ^ cv ? 1 : 0
+    }
+
+    setOrBit (x, y, v) {
+        const i = this.index_for_xy(x, y)
+        const cv = this._bits[i]
+        this._bits[i] = v || cv ? 1 : 0
     }
 
     copy (frame) {
@@ -279,4 +285,60 @@ class LedFrame {
     }
 
 
+    mirrorLeftToRight () {
+        const xmax = this._xmax
+        const ymax = this._ymax
+
+        const newFrame = new LedFrame()
+        for (let y = 0; y < ymax; y++) {
+            for (let x = 0; x < xmax/2 + 1; x++) {
+                let xx = xmax - 1- x
+                const v = this.getBit(x, y)
+                newFrame.setBit(x, y, v)
+                newFrame.setBit(xx, y, v)
+            }
+        }
+        this._bits = newFrame._bits
+        return this
+    }
+
+
+    mirrorTopToBottom () {
+        const xmax = this._xmax
+        const ymax = this._ymax
+
+        const newFrame = new LedFrame()
+        for (let y = 0; y < ymax/2 +1; y++) {
+            for (let x = 0; x < xmax; x++) {
+                let yy = ymax - 1- y
+                const v = this.getBit(x, y)
+                newFrame.setBit(x, y, v)
+                newFrame.setBit(x, yy, v)
+            }
+        }
+        this._bits = newFrame._bits
+        return this
+    }
+
+    mirrorDiagonal () {
+        const xmax = this._xmax
+        const ymax = this._ymax
+
+        const newFrame = new LedFrame()
+        for (let y = 0; y < ymax/2 + 1; y++) {
+            for (let x = 0; x < xmax/2 +1; x++) {
+                const v = this.getBit(x, y)
+                newFrame.setBit(x, y, v)
+                newFrame.setBit(xmax -1 -x, y, v)
+                newFrame.setBit(x, ymax - 1 - y, v)
+                newFrame.setBit(xmax -1 -x, ymax - 1 - y, v)
+                //newFrame.setOrBit(x, y, v)
+                //newFrame.setBit(xmax -1 - y, x, v)
+                //newFrame.setBit(y, ymax -1 - x, v)
+            }
+        }
+        this._bits = newFrame._bits
+        return this
+    }
 }
+

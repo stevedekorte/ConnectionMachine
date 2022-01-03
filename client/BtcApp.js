@@ -5,7 +5,9 @@
 class BtcApp extends LedApp {
     constructor (self) {
         super();
-        this._btcData = new BlockCypherAPI()
+        //this._btcData = new BlockCypherAPI()
+        this._btcData = new BlockChainAPI()
+
         this._btcData.setDelegate(this)
         this._btcData.connect()
 
@@ -46,7 +48,9 @@ class BtcApp extends LedApp {
                 const block = blocks[i]
                 const btcTransacted = block.total / 100000000;
                 const v = Math.floor(btcTransacted)
-                this.frame().drawBitsForNumberAt(0, i, v)
+                //this.frame().drawBitsForNumberAt(0, i, v)
+                const m = Math.log10(v)
+                this.frame().drawFromTo(0, i, m, i)
             }
         }
     }

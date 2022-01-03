@@ -39,7 +39,38 @@ class HtmlDisplay {
 				item.style.display = "inline-block"
 				item.style.margin = "0px"
 				item.style.padding = "0px"
-				item.style.color = "#ff0000"
+				item._dict = { bit: 1, x: x, y: y }
+				item._htmlDisplay = this
+				item.style.filter = "blur(1.5px)"
+				item.style.userSelect = "none"
+
+				
+				const self = this
+				
+				item.onclick = (event) => { 
+					self.onClickItem(item)
+				}
+				
+				item.bit = function () {
+					return this._dict.bit
+				}
+
+				item.setBit = function (v) {
+					this._dict.bit = v ? 1 : 0
+					if (v) {
+						this.style.color = "#ff0000"
+					} else {
+						this.style.color = "#110000"
+					}
+					return this
+				}
+				
+				item.toggleBit = function () {
+					this.setBit(this.bit() ? 0 : 1)
+				}
+
+				item.setBit(0)
+
 				//item.style.transition = "all 0s"
 				//item.innerHTML = x + "." + y
 				row.appendChild(item)
@@ -66,6 +97,8 @@ class HtmlDisplay {
 			for (let x = 0; x < xmax; x++) {
 				const item = this.elementAtXY(x, y)
 				const v = this.frame().getBit(x, y)
+				item.setBit(v)
+				/*
 				if (v === 1) {
 					item.style.color = "#ff0000"
 					//item.style.opacity = min + (this._brightness/15)*(1 - min)
@@ -73,6 +106,7 @@ class HtmlDisplay {
 					item.style.color = "#440000"
 					//item.style.opacity = 0.1
 				}
+				*/
 			}
 		}
 	}
@@ -151,6 +185,14 @@ class HtmlDisplay {
 		//this._element.style.right = dx + "px"
 		//this._element.style.top = dy + "px"
 		this._element.style.bottom = dy + "px"
+	}
+
+	onClickItem (element) {
+		console.log("click ", element._dict.x, " ", element._dict.y)
+		element.toggleBit()
+		if (this._delegate && this._delegate.onClickItem) {
+			this._delegate.onClickLight(element._dict.x, element._dict.y)
+		}
 	}
 }
 

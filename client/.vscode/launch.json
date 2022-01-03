@@ -1,7 +1,4 @@
 {
-    // Use IntelliSense to learn about possible attributes.
-    // Hover to view descriptions of existing attributes.
-    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
 
@@ -11,6 +8,23 @@
             "name": "Launch client",
             "url": "file:///${workspaceFolder}/index.html",
             "webRoot": "${workspaceFolder}"
-        }
+        },
+
+        {
+            "type": "chrome",
+            "request": "launch",
+            "name": "Launch on local node server",
+            "url": "https://localhost:8000/index.html",
+            /*"preLaunchTask": "Run local node HTTPS server",*/
+        },
+        
+        {
+            "type": "node",
+            "protocol": "inspector",
+            "request": "launch",
+            "name": "Launch node server",
+            "cwd": "${workspaceFolder}/server",
+            "program": "${workspaceFolder}/server/server.js"
+          },
     ]
 }

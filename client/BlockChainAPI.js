@@ -1,4 +1,4 @@
-class BtcData {
+class BlockChainAPI {
 	constructor () {
 		this._socket = null
 		this._protocol = "wss"
@@ -10,19 +10,34 @@ class BtcData {
 		//this._utxs = []
 		this._utxDict = {}
 		this._newBlocks = []
+		this._blocksDict = {}
+		this._blocks = []
+
+		//this._storage = new Storage()
 	}
 
-	blockHeight () {
-		const lastBlock = this._newBlocks[this._newBlocks.length - 1]
-		if (lastBlock) {
-			return lastBlock.x.height
-		}
-		return 0
+
+	blocks () {
+		return this._blocks
 	}
 
-	newBlocks () {
-		return this._newBlocks
+	getBlockForHash (blockHash) {
+		return this._blocksDict[blockHash]
 	}
+
+	setBlockForHash (blockHash, block) {
+		this._blocksDict[blockHash] = block
+		this.updateBlocks()
+		return this
+	}
+
+	updateBlocks () {
+		const blocks = Object.values(this._blocksDict)
+		blocks.sort( (a, b) => a.height > b.height )
+		this._blocks = blocks
+		return this
+	}
+
 
 	utxDict () {
 		return this._utxDict
@@ -72,7 +87,7 @@ class BtcData {
 		this.log("onOpen()")
 		this.ping()
 		this.subscribeNewBlocks()
-		this.subscribeUnconfirmedTxs()
+		//this.subscribeUnconfirmedTxs()
 	};
 
 	onError (event) {
@@ -104,11 +119,14 @@ class BtcData {
 
 	onBlockMessage (json) {
 		this.log("onBlockMessage('" + JSON.stringify(json) + "')")
-		this._newBlocks.push(json)
+		
+		this.setBlockForHash(json.x.hash, json.x)
 
+		/*
 		json.x.txIndexes.forEach((txIndex) => {
 			delete this._utxDict[txIndex]
 		})
+		*/
 
 		if (this._delegate && this._delegate.onBlockMessage) {
 			this._delegate.onBlockMessage(json)

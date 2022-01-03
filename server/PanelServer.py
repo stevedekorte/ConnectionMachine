@@ -25,7 +25,10 @@ class PanelServer(object):
 
 	def run(self):
 		print("running on host " + self.host + " and port " + str(self.port))
-		server = WebsocketServer(host = self.host, port = self.port, loglevel = logging.ERROR)
+
+		server = WebsocketServer(host = self.host, port = self.port, key="key.pem", cert="cert.pem", loglevel = logging.ERROR)
+		//server = WebsocketServer(host = self.host, port = self.port, loglevel = logging.ERROR)
+
 		server.set_fn_new_client(lambda client, server : self.onClientConnect(client, server) )
 		server.set_fn_client_left(lambda client, server : self.onClientDisconnect(client, server) )
 		server.set_fn_message_received(lambda client, server, message : self.onClientMessage(client, server, message) )

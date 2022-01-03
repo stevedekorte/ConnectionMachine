@@ -239,10 +239,16 @@ class ChristmasTreeMask extends Animation {
 // --------------------------------------------------------------
 
 
-class Point2d {
+window.Point2d = class Point2d {
     constructor(self) {
         this._x = 0
         this._y = 0
+        return this
+    }
+
+    set (x, y) {
+        this.setX(x)
+        this.setY(y)
         return this
     }
 
@@ -309,6 +315,17 @@ class Point2d {
     rounded() {
         return this.clone().round()
     }
+
+    multipliedByScalar(v) {
+        const p = this.clone().multiplyScalar(v)
+        return p
+    }
+
+    zero () {
+        this.setX(0)
+        this.setY(0)
+        return this
+    }
 }
 
 class Thing {
@@ -324,7 +341,7 @@ class Particle extends Thing {
         super()
         this._intPosition = new Point2d()
         this._position = new Point2d()
-        this._velocity = new Point2d()
+        this._velocity = new Point2d().zero()
         //this._acceleration = new Point2d()
         this._animation = null
         this._stopped = false
@@ -472,16 +489,18 @@ class ParticlesAnimation extends Animation {
     newParticle() {
         const p = new Particle()
         p.setAnimation(this)
-        this.particles().push(p)
         this.placeParticle(p)
+        this.particles().push(p)
         return p
     }
 
     placeParticle(p) {
-        const x = Math.round(Math.random() * 100000) % this.xmax()
+        const x = Math.round(16+Math.random() * 32) % this.xmax()
         p.position().setX(x)
         p.position().setY(Math.round(0 - Math.random() * 6))
         p.velocity().setY(0.1 * (Math.random() * 0.5 + 0.5))
+        p._intPosition.copy(p.position())
+        //p.updateIntPosition()
     }
 
     step () {

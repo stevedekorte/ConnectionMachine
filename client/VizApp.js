@@ -2,7 +2,9 @@
 
 */
 
-class VizApp extends LedApp {
+//import "RandomAnimation.js"
+
+window.VizApp = class VizApp extends LedApp {
     constructor () {
         super()
         this.setFps(30)
@@ -24,7 +26,7 @@ class VizApp extends LedApp {
         this._activeAnimations = []
 
         this.setupAnimations()
-
+        this.display().setBrightness(15)
         return this
     }
 
@@ -53,8 +55,6 @@ class VizApp extends LedApp {
         this._activeAnimations.slice().forEach((anim) => {
             anim.step()
         })
-
-        this.display().setBrightness(0)
 
         this.frame().clear()
 

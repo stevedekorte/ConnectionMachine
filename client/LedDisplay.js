@@ -8,6 +8,7 @@ class LedDisplay {
 		this._delegate = null
 		this._isConnected = false
 		this._brightness = 1
+		this._autoBrightness = true
 	}
 
 	isConnected () {
@@ -34,6 +35,7 @@ class LedDisplay {
 	}
 
 	url () {
+		//const url = "wss://" + this._host + ":" + this._port + "/"
 		const url = "ws://" + this._host + ":" + this._port + "/"
 		return url
 	}
@@ -70,14 +72,27 @@ class LedDisplay {
 		this.setIsConnected(false)
 	}
 
+	currentBrightness () {
+		if (this._autoBrightness) {
+			const d = new Date()
+			const h = d.getHours()
+			if (h > 7 && h < 22) {
+				return 15
+			}
+			return 0
+		} 
+		return this._brightness
+	}
+
 	render () {
 		if (this.isConnected()) {
 			const json = {
 				frame: this._frame.asHexFrame(),
-				brightness: this._brightness
+				brightness: this.currentBrightness()
 			}
 			const s = JSON.stringify(json)
 			this.rawSend(s)
+			//console.log("this._brightness = ",  this._brightness)
 		}
 	}
 
