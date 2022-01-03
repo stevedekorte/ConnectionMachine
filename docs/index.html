@@ -1,83 +1,113 @@
 <!doctype html>
 <html lang="en">
-<head>
-	<meta charset="utf-8">
-	<title>CM</title>
+	<head>
+		<meta charset="utf-8">
+		<title>io about</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="home.css">
+		<link rel="stylesheet" href="home_header.css">
+		<link rel="stylesheet" href="about.css">
+		<link rel="stylesheet" href="fonts/Helvetica/fonts.css">
+		<style>
 
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link href="./Fonts/Helvetica/fonts.css" rel="stylesheet" type="text/css">
-	<link href="style.css" rel="stylesheet" type="text/css">
+			.pageTitle {
+				font-size: 3em;
+			}
 
-	<style>
-		
-	</style>
-</head>
+			a:link {
+				color: #aaa;
+			}
+			a:visited {
+				color: #aaa;
+			}
+			a:hover {
+				color: #888;
+			}
 
-<body class="KeyNav">
+			.chunkLeft {
+				width: 5em;
+				color: #fff;
+			}
 
-	<div id="container" class="container leftSpace">
-		<div class="header">
-			<div class="pageHeader">
-				<div class="topSpace"></div>
-				<div style="white-space: nowrap;">
-					<div id="typeit" class="pageTitle" style="white-space: nowrap; display: inline-block;">Connection Machine LED project
-					</div>
-					<div style="display: inline-block; height: 5.2vw; border: 0px dashed white; position: relative;">
-						<div id="cursor" class="cursor">&nbsp;</div>
-					</div>
-				</div>
-				<!--
-					<div class="pageTitle">Steve&nbsp;Dekor<span style="font-size:17px;">&nbsp;</span>te</div>
-                    -->
+			.chunkRight {
+				color: #ddd;
+			}
+        </style>
+	</head>
+	<body>
+		<div class="container leftSpace">
+		    <div class="header">
+            	<div class="pageHeader">
+			        <div class="topSpace"></div>
+					<div class="pageTitle" style="text-transform: none;">ConnectionMachine<span style="color: #333;">.fun</span></div>
+					<div class="pageSubtitle"> / about </div>
+			    </div>
+			</div>
+			<div class="text">
+			    <div class="description">
+                An open source <a href="https://en.wikipedia.org/wiki/Connection_Machine">CM2</a> inspired LED panel project.<br>
+				Board design by Jonathan Foote.
+				<!-- 
+				PCB board with a 32x32 LED grid driven by HT1632C chip controlled by Rhaspberry PI.<br>
+				Specs are open sourced here for other DIY. -->
+                </div>
+                <div class="items">
 
-				<div id="about" class="pageSubtitle"> / about </div>
+                    <div class="chunk">
+                        <div class="chunkLeft">
+                            specs
+                        </div>
+                        <div class="chunkRight">
+							32x32 LED grid<br>
+							HT1632C LED driver chip<br>
+							Rhaspberry PI 0 BCM2835<br>
+                        </div>
+                    </div>
+
+                    <div class="chunk">
+                        <div class="chunkLeft">
+                            board
+                        </div>
+                        <div class="chunkRight">
+							dimensions<br>
+							<a href=""></a>PCB spec<br>
+							HT1632C LED driver<br>
+							photos<br>
+                        </div>
+                    </div>
+<!-- 
+					<div class="chunk">
+                        <div class="chunkLeft">
+                            enclosure
+                        </div>
+                        <div class="chunkRight">
+                            photos<br>
+                        </div>
+                    </div>
+				-->
+                    <div class="chunk">
+                        <div class="chunkLeft">
+                            server 
+                        </div>
+                        <div class="chunkRight">
+							python3<br>
+							secure web sockets<br>
+							receives json with hex framebuffer and brightness<br>
+                        </div>
+                    </div>
+                    
+                    <div class="chunk">
+                        <div class="chunkLeft">
+                            client 
+                        </div>
+                        <div class="chunkRight">
+                            javascript<br>
+							in browser simulator<br>
+                        </div>
+                    </div>
+                   
+                <br>
 			</div>
 		</div>
-		<div id="content" class="text">
-			<div class="description">
-			</div>
-			<div class="chunks">
-				
-				<div class="chunk" style="margin-top: 4em;">
-					<div class="chunkLeft">
-						project info
-					</div>
-					<div class="chunkRight">
-						<div class=Project>
-							<a class="KeyNav ProjectTitle" href="pcb.html" target="_blank">PCB design</a>
-							<div class=ProjectSubtitle>programming language</div>
-						</div>
-
-					</div>
-				</div>
-
-
-				<div class="chunk">
-					<div class="chunkLeft">
-						links
-					</div>
-					<div class="chunkRight">
-						<a class="KeyNav ProjectTitle" href="">github</a><br>
-					</div>
-				</div>
-
-			</div>
-			<br>
-		</div>
-	</div>
-
-	<script>
-
-	
-
-	</script>
-
-	<script>
-		window.onresize = function (event) {
-			updateTop()
-		};
-	</script>
-
-</body>
-
+	</body>
 </html>
