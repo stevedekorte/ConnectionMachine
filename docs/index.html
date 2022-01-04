@@ -10,15 +10,26 @@
 		<link rel="stylesheet" href="fonts/Helvetica/fonts.css">
 		<style>
 
+			html, body {
+				height: 100%;
+				font-size: max(14px, 0.9vw);
+				/*font-size: min(2vh, 1vw);*/
+				width: auto;
+			}
+
 			.pageTitle {
 				font-size: 3em;
 			}
 
+			.text {
+				margin-top: 3em;
+			}
+
 			a:link {
-				color: #aaa;
+				color: #999;
 			}
 			a:visited {
-				color: #aaa;
+				color: #999;
 			}
 			a:hover {
 				color: #888;
@@ -46,7 +57,9 @@
 			<div class="text">
 			    <div class="description">
                 An open source <a href="https://en.wikipedia.org/wiki/Connection_Machine">CM2</a> inspired LED panel project.<br>
-				Board design by Jonathan Foote.
+				Board design by Jonathan Foote.<br>
+
+				<a href="media/board.jpg"><img src="media/board.jpg" style="width: 25em; height:auto; margin: 3em; filter: grayscale(0.2);"></a>
 				<!-- 
 				PCB board with a 32x32 LED grid driven by HT1632C chip controlled by Rhaspberry PI.<br>
 				Specs are open sourced here for other DIY. -->
@@ -59,23 +72,35 @@
                         </div>
                         <div class="chunkRight">
 							32x32 LED grid<br>
-							HT1632C LED driver chip<br>
-							Rhaspberry PI 0 BCM2835<br>
+							[board dimensions]<br>
+							<a href="../specs/hardware design/cm2-gerbers.zip">Gerbers PCB files</a><br>
                         </div>
                     </div>
 
-                    <div class="chunk">
+					<div class="chunk">
                         <div class="chunkLeft">
-                            board
+                            parts
                         </div>
                         <div class="chunkRight">
-							dimensions<br>
-							<a href=""></a>PCB spec<br>
-							HT1632C LED driver<br>
+							1 &#215; BCM2835 - Rhaspberry PI 0 CPU chip<br>
+							1 &#215; HT1632C - LED driver chip<br>
+							1024 &#215; [XXX] LEDs<br>
+							1 &#215; [XXX] power supply
+                        </div>
+                    </div>
+
+<!-- 
+
+                    <div class="chunk">
+                        <div class="chunkLeft">
+                            design
+                        </div>
+                        <div class="chunkRight">
+							<a href="../specs/hardware design/cm2-gerbers.zip">Gerbers PCB files</a><br>
 							photos<br>
                         </div>
                     </div>
-<!-- 
+
 					<div class="chunk">
                         <div class="chunkLeft">
                             enclosure
@@ -90,9 +115,9 @@
                             server 
                         </div>
                         <div class="chunkRight">
-							python3<br>
-							secure web sockets<br>
+							python3 secure web sockets server<br>
 							receives json with hex framebuffer and brightness<br>
+							sends to HT1632C python3 binding<br>
                         </div>
                     </div>
                     
@@ -101,8 +126,8 @@
                             client 
                         </div>
                         <div class="chunkRight">
-                            javascript<br>
-							in browser simulator<br>
+                            javascript in browser simulator<br>
+							sends websocket messages to server on LED panel if availible
                         </div>
                     </div>
                    
