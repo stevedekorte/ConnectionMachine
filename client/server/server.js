@@ -1,4 +1,14 @@
+const fs = require('fs');
 
+const args = process.argv.slice(2);
+console.log("args = ", args)
+
+let workspace = ".." //__dirname + "/../"
+if (args[0] === "-path") {
+	//workspace = __dirname + "/" + args[1]
+	workspace =  args[1]
+}
+console.log("workspace = '" + workspace + "'")
 
 // A naive attempt at getting the global `this`. Don’t use this!
 function getGlobalThis() {
@@ -23,7 +33,6 @@ function getGlobalThis() {
 	//console.log("root_require " + path)
 	//console.log("__dirname " + __dirname)
 
-	const fs = require('fs');
 
 	const fullPath = __dirname + "/../" + path // back one folder from server
 	console.log("root_require fullPath " + fullPath)
@@ -68,7 +77,6 @@ Globals_setup()
 
 
 const https = require('https');
-const fs = require('fs');
 //var vm = require('vm')
 
 /*
@@ -125,7 +133,8 @@ https.createServer(options, function (request, res) {
 	//console.log("  decoded url:" + decodeURI(request.url))
 	//res.write("  path: '" + url.pathname + "'\n" );			
 	const url = new URL("https://hostname" + request.url)
-	const path = ".." + decodeURI(url.pathname)
+	//const path = ".." + decodeURI(url.pathname)
+	const path = workspace + decodeURI(url.pathname)
 
 	var queryDict = {}
 	Array.from(url.searchParams.entries()).forEach(entry => queryDict[entry[0]] = entry[1])

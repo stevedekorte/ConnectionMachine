@@ -2,6 +2,32 @@
     "version": "0.2.0",
     "configurations": [
 
+
+        {
+            "type": "pwa-chrome",
+            "request": "launch",
+            "name": "Launch Equalizer app",
+            "url": "https://localhost:9000/apps/Equalizer/index_incremental.html",
+            "webRoot": "${workspaceFolder}/apps/Equalizer/"
+        },
+
+
+        {
+            "type": "pwa-chrome",
+            "request": "launch",
+            "name": "Launch LightBright app",
+            "url": "file:///${workspaceFolder}/apps/LightBright/index_incremental.html",
+            "webRoot": "${workspaceFolder}/apps/LightBright/"
+        },
+
+        {
+            "type": "pwa-chrome",
+            "request": "launch",
+            "name": "Launch Braille app",
+            "url": "file:///${workspaceFolder}/apps/Braille/index_incremental.html",
+            "webRoot": "${workspaceFolder}/apps/Braille/"
+        },
+
         {
             "type": "pwa-chrome",
             "request": "launch",
@@ -25,6 +51,6 @@
             "name": "Launch node server",
             "cwd": "${workspaceFolder}/server",
             "program": "${workspaceFolder}/server/server.js"
-          },
+        },
     ]
 }
