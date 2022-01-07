@@ -4,10 +4,25 @@
 
 
         {
-            "type": "pwa-chrome",
+            "type": "chrome",
+            "request": "launch",
+            "name": "Launch CellularAutomata app",
+            "url": "file:///${workspaceFolder}/apps/CellularAutomata/index_incremental.html",
+            "webRoot": "${workspaceFolder}/apps/CellularAutomata/"
+        },
+
+
+        {
+            //"type": "pwa-chrome",
+            "type": "chrome",
+            //"type": "pwa-brave",
             "request": "launch",
             "name": "Launch Equalizer app",
-            "url": "https://localhost:9000/apps/Equalizer/index_incremental.html",
+            //"url": "https://localhost:9000/apps/Equalizer/index_incremental.html",
+            "url": "file:///${workspaceFolder}/apps/Equalizer/index_incremental.html",
+            "runtimeArgs": [
+                "--disable-web-security"
+              ],
             "webRoot": "${workspaceFolder}/apps/Equalizer/"
         },
 

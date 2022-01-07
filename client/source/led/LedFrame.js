@@ -218,7 +218,7 @@ class LedFrame {
             const x = Math.round(x1 + (x2 - x1) * i / d)
             const y = Math.round(y1 + (y2 - y1) * i / d)
             if (bitFunc) {
-                this.setBit(x, y, bitFunc(i, x, y) ? 1 : 0)
+                this.setBit(x, y, bitFunc(i, x, y, d) ? 1 : 0)
             } else {
                 this.setBit(x, y, 1)
             }
@@ -226,7 +226,7 @@ class LedFrame {
 
         // make sure we get the end point in
         if (bitFunc) {
-            this.setBit(x2, y2, bitFunc(d, x2, y2) ? 1 : 0)
+            this.setBit(x2, y2, bitFunc(d, x2, y2, d) ? 1 : 0)
         } else {
             this.setBit(x2, y2, 1)
         }

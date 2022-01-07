@@ -135,6 +135,11 @@ window.BrailleApp = class BrailleApp extends LedApp {
 
     autoWrite () {
         const charsPerScreen = 180
+        
+        if (this._t % 200 === 0) {
+            this.clearText()
+        }
+
         if (this.text().length < charsPerScreen || this._t % 20 === 0) {
             const s = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789            "
             //const s = "LAB"
