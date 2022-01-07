@@ -3,31 +3,34 @@
 window.GameOfLifeApp = class GameOfLifeApp extends LedApp {
     constructor () {
         super()
-        this.setFps(20)
+        this.setFps(120)
 
         const frame = this.frame()
         frame.randomize()
 
         this._nextFrame = new LedFrame()
-        this._previousFrames = []
-        this._maxHistory = 3
+        this._hashHistory = []
+        this._maxHistory = 100
     }
 
-    isInLoop () {
-        for (let i = 0; i < this._previousFrames.length; i++) {
-            const pf = this._previousFrames[i]
-            if (pf.equals(this.frame())) {
-                return true
-            }
+    checkForLoop () {
+        const hash = this.frame().hash()
+        const matches = this._hashHistory.filter((h) => h == hash)
+        const isInLoop = matches.length != 0
+
+        this._hashHistory.push(hash)
+        while (this._hashHistory.length > this._maxHistory) {
+            this._hashHistory.shift()
         }
-        return false
+
+        if (isInLoop) {
+            this.frame().randomize()
+        }
     }
 
-    recordCurrentFrame () {
-        this._previousFrames.push(this.frame().duplicate())
-        while (this._previousFrames.length > this._maxHistory) {
-            this._previousFrames.shift()
-        }
+    clearHistory () {
+        this._hashHistory = []
+        return this
     }
 
     step () {
@@ -39,7 +42,7 @@ window.GameOfLifeApp = class GameOfLifeApp extends LedApp {
         const nextFrame = this._nextFrame
         const frame = this.frame()
 
-        nextFrame.copy(frame)
+        //nextFrame.copy(frame)
         
         let changes = 0
         for (let x = 0; x < xmax; x++) {
@@ -78,10 +81,6 @@ window.GameOfLifeApp = class GameOfLifeApp extends LedApp {
         }
         */
 
-        if (this.isInLoop()) {
-            frame.randomize()
-        } else {
-            this.recordCurrentFrame()
-        }
+        this.checkForLoop()
     }
 }

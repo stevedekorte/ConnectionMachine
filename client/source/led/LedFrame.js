@@ -32,6 +32,16 @@ Array.prototype.remove = function(v) {
   return this;
 }
 
+String.prototype.hashCode = function() {
+    var hash = 0;
+    for (var i = 0; i < this.length; i++) {
+        var char = this.charCodeAt(i);
+        hash = ((hash<<5)-hash)+char;
+        hash = hash & hash; // Convert to 32bit integer
+    }
+    return hash;
+}
+
 
 class LedFrame {
     constructor () {
@@ -44,6 +54,10 @@ class LedFrame {
         const f = new LedFrame()
         f.copy(this)
         return f
+    }
+
+    hash () {
+        return this._bits.join("").hashCode()
     }
 
     bits () {

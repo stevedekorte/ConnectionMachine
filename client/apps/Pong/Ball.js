@@ -1,5 +1,7 @@
 "use strict"
 
+console.log("CellularAutomataApp")
+
 window.CellularAutomataApp = class CellularAutomata extends LedApp {
     constructor () {
         super()
