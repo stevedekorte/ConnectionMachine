@@ -2,7 +2,7 @@
 
 
 window.AltAnimation = class AltAnimation extends LineAnimation {
-    constructor(self) {
+    constructor() {
         super()
         this.setTMax(10)
         this.setStartKey("E")

@@ -23,7 +23,7 @@ class LedApp {
 
         /*
         this.keyboard = Keyboard()
-        this.keyboard.setDelegate(self)
+        this.keyboard.setDelegate(this)
         this.keyboard.startListening()
         */
 

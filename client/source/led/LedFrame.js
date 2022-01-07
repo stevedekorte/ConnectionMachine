@@ -46,6 +46,23 @@ class LedFrame {
         return f
     }
 
+    bits () {
+        return this._bits
+    }
+
+    equals (frame) {
+        if (this.bits().length != frame.bits().length) {
+            return false
+        }
+
+        for (let i = 0; i < this._bits.length; i++) {
+            if (this._bits[i] != frame.bits()[i]) {
+                return false
+            }
+        }
+        return true
+    }
+
     trueBitCount () {
         let count = 0
         this._bits.forEach((b) => { if (b === 1) { count ++ }})
@@ -115,6 +132,14 @@ class LedFrame {
     // --- xy utility methods ---
 
     index_for_xy (x, y) {
+        if (x < 0) {
+            x = this._xmax + 1 + x
+        }
+        if (y < 0) {
+            y = this._ymax + 1 + y
+        }
+        x = x % this._xmax
+        y = y % this._ymax
         const index = (Math.floor(x) * this._xmax) + Math.floor(y)
         return index
     }

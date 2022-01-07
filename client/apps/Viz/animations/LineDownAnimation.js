@@ -2,7 +2,7 @@
 
 
 window.LineDownAnimation = class LineDownAnimation extends LineAnimation {
-    constructor(self) {
+    constructor() {
         super()
         this.setTMax(this.frame().height() - 1)
         this.setStartKey("S")

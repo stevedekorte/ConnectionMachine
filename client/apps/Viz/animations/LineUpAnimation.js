@@ -1,7 +1,7 @@
 "use strict"
 
 window.LineUpAnimation = class LineUpAnimation extends LineAnimation {
-    constructor(self) {
+    constructor() {
         super()
         this.setTMax(this.frame().height() - 1)
         this.setStartKey("W")

@@ -2,7 +2,7 @@
 
 
 window.LineRightAnimation = class LineRightAnimation extends LineAnimation {
-    constructor(self) {
+    constructor() {
         super()
         this.setTMax(this.frame().width() - 1)
         this.setStartKey("D")

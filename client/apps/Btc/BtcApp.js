@@ -5,7 +5,7 @@
 */
 
 class BtcApp extends LedApp {
-    constructor (self) {
+    constructor () {
         super();
         this._btcData = new BlockCypherAPI()
         //this._btcData = new BlockChainAPI()

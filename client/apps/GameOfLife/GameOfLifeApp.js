@@ -8,14 +8,35 @@ window.GameOfLifeApp = class GameOfLifeApp extends LedApp {
         const frame = this.frame()
         frame.randomize()
 
-        self._nextFrame = new LedFrame()
+        this._nextFrame = new LedFrame()
+        this._previousFrames = []
+        this._maxHistory = 3
+    }
+
+    isInLoop () {
+        for (let i = 0; i < this._previousFrames.length; i++) {
+            const pf = this._previousFrames[i]
+            if (pf.equals(this.frame())) {
+                return true
+            }
+        }
+        return false
+    }
+
+    recordCurrentFrame () {
+        this._previousFrames.push(this.frame().duplicate())
+        while (this._previousFrames.length > this._maxHistory) {
+            this._previousFrames.shift()
+        }
     }
 
     step () {
+        super.step()
+
         const xmax = this.frame().width()
         const ymax = this.frame().height()
 
-        const nextFrame = self._nextFrame
+        const nextFrame = this._nextFrame
         const frame = this.frame()
 
         nextFrame.copy(frame)
@@ -43,11 +64,24 @@ window.GameOfLifeApp = class GameOfLifeApp extends LedApp {
                 } else {
                     if (total === 3) {
                         nextFrame.setBit(x, y, 1)
+                        changes ++
                     }
                 }
             }
         }
         frame.copy(nextFrame)
-        frame.addOneRandomOnBit()
+        /*
+        if (changes < 100) {
+            for (let i = 0; i < changes; i++) {
+                frame.addOneRandomOnBit()
+            }
+        }
+        */
+
+        if (this.isInLoop()) {
+            frame.randomize()
+        } else {
+            this.recordCurrentFrame()
+        }
     }
 }

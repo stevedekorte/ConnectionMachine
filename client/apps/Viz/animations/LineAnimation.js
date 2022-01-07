@@ -4,7 +4,7 @@
 // --------------------------------------------
 
 window.LineAnimation = class LineAnimation extends Animation {
-    constructor(self) {
+    constructor() {
         super()
         this.setTMax(this.frame().width())
         this.setStartKey("L")

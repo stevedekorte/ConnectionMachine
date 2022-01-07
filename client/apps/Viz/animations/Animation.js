@@ -5,7 +5,7 @@
 */
 
 window.Animation = class Animation {
-    constructor (self) {
+    constructor () {
         this._tMax = 100
         this._t = 0
         this._frame = new LedFrame()

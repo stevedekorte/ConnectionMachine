@@ -1,7 +1,7 @@
 "use strict"
 
 window.Point2d = class Point2d {
-    constructor(self) {
+    constructor() {
         this._x = 0
         this._y = 0
         return this

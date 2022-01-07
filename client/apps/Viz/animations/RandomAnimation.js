@@ -5,7 +5,7 @@
 */
 
 window.RandomAnimation = class RandomAnimation extends Animation {
-    constructor(self) {
+    constructor() {
         super()
         this.setTMax(30)
         this.setStartKey("R")

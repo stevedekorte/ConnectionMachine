@@ -2,13 +2,13 @@
 
 
 window.Thing = class Thing {
-    constructor(self) {
+    constructor() {
         return this
     }
 }
 
 window.Particle = class Particle extends Thing {
-    constructor(self) {
+    constructor() {
         super()
         this._intPosition = new Point2d()
         this._position = new Point2d()

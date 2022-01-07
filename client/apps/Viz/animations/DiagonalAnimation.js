@@ -1,7 +1,7 @@
 "use strict"
 
 window.DiagonalAnimation = class DiagonalAnimation extends LineAnimation {
-    constructor(self) {
+    constructor() {
         super()
         this.setTMax(this.frame().width() * 2 - 1)
         this.setStartKey("Q")

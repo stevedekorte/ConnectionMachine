@@ -2,7 +2,7 @@
 
 
 window.ChristmasTreeMask = class ChristmasTreeMask extends Animation {
-    constructor(self) {
+    constructor() {
         super()
         this.setTMax(10)
         this.setStartKey("T")

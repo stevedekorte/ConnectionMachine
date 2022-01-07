@@ -5,7 +5,7 @@
 */
 
 window.ParticlesAnimation = class ParticlesAnimation extends Animation {
-    constructor(self) {
+    constructor() {
         super()
         this.setTMax(null)
         this.setStartKey("P")
