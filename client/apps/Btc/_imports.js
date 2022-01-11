@@ -1,9 +1,10 @@
 
 ResourceLoader.pushRelativePaths([
     "../../_imports.js",
-    "BlockChainAPI.js",
+    //"BlockChainAPI.js",
     "BlockCypherAPI.js",
-    "BtcApp.js",
+    //"BitcoinExplorerAPI.js",
+    "BtcApp.js"
 ]);
 
 

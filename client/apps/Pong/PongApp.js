@@ -3,47 +3,23 @@
 window.PongApp = class PongApp extends LedApp {
     constructor () {
         super()
-        this._ca = new CA()
-        this.setFps(1)
+        this.setFps(3)
+        this._paddle1 = new Paddle()
+        this._paddle2 = new Paddle()
+        this._ball = new Ball()
+        this._objects = [this._paddle1, this._paddle2, this._ball]
     }
 
     step () {
         super.step()
-
-        const ca = this._ca
-        const xmax = this.frame().width()
-        const ymax = this.frame().height()
-        const frame = this.frame()
-
         
-        if (ca.generation() % 32 == 0) {
-            //ca.randomizeRules()
-            ca.mutateRules()
-        }
+        this._objects.foreach(obj => obj.step())
 
-        
-        if (ca.generation() % 32 == 1) {
-            ca.randomizeCells()
-            ca.mutateCells()
-        }
+        this.render()
+    }
 
-        const y = ca.generation() % ymax
+    render () {
+        this._objects.foreach(obj => obj.render())
 
-        ca.generate()
-
-        // copy cells to frame
-        for (let x = 0; x < xmax; x++) { 
-            const v = ca.cells()[x] ? 1 : 0
-            frame.setBit(x, y, v)
-        }
-
-        /*
-        // copy cells from frame
-        for (let x = 0; x < xmax; x++) {
-            ca.cells[x] = frame.getBit(x, y)
-            //console.log("frame:", frame.bits)
-        }
-        */
-    
     }
 }

@@ -4,11 +4,13 @@
     subclass this class to make custom Led apps
 */
 
-class BtcApp extends LedApp {
+window.BtcApp = class BtcApp extends LedApp {
     constructor () {
         super();
-        this._btcData = new BlockCypherAPI()
+        //this._btcData = new BitcoinExplorerAPI()
+        //this._btcData = new BlockCypherAPI()
         //this._btcData = new BlockChainAPI()
+        this._btcData = new AlphaVantageAPI()
 
         this._btcData.setDelegate(this)
         this._btcData.connect()

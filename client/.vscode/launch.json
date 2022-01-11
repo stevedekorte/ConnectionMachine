@@ -5,6 +5,22 @@
         {
             "type": "chrome",
             "request": "launch",
+            "name": "Launch Market app",
+            "url": "file:///${workspaceFolder}/apps/Market/index_incremental.html",
+            "webRoot": "${workspaceFolder}/apps/Market/"
+        },
+        
+        {
+            "type": "chrome",
+            "request": "launch",
+            "name": "Launch Btc app",
+            "url": "file:///${workspaceFolder}/apps/Btc/index_incremental.html",
+            "webRoot": "${workspaceFolder}/apps/Btc/"
+        },
+
+        {
+            "type": "chrome",
+            "request": "launch",
             "name": "Launch GameOfLife app",
             "url": "file:///${workspaceFolder}/apps/GameOfLife/index_incremental.html",
             "webRoot": "${workspaceFolder}/apps/GameOfLife/"
