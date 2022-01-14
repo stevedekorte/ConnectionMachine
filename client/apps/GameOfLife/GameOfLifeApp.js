@@ -3,28 +3,29 @@
 getGlobalThis().GameOfLifeApp = class GameOfLifeApp extends LedApp {
     constructor () {
         super()
-        this.setFps(10)
+        this.setFps(80)
 
         const frame = this.frame()
         frame.randomize()
 
-        this._nextFrame = new LedFrame()
-        this._hashHistory = []
-        this._maxHistory = 100
+        this.newSlot("nextFrame", new LedFrame())
+        this.newSlot("hashHistory", [])
+        this.newSlot("maxHistory", 100)
     }
 
     checkForLoop () {
         const hash = this.frame().hash()
-        const matches = this._hashHistory.filter((h) => h == hash)
+        const matches = this.hashHistory().filter((h) => h == hash)
         const isInLoop = matches.length != 0
 
-        this._hashHistory.push(hash)
-        while (this._hashHistory.length > this._maxHistory) {
+        this.hashHistory().push(hash)
+        while (this.hashHistory().length > this.maxHistory()) {
             this._hashHistory.shift()
         }
 
         if (isInLoop) {
             this.frame().randomize()
+            this.clearHistory()
         }
     }
 
@@ -44,18 +45,17 @@ getGlobalThis().GameOfLifeApp = class GameOfLifeApp extends LedApp {
 
         //nextFrame.copy(frame)
         
-        let changes = 0
         for (let x = 0; x < xmax; x++) {
             for (let y = 0; y < ymax; y++) {
                 const total = (
-                    frame.getBit(x, (y-1) % ymax) + 
-                    frame.getBit(x, (y+1) % ymax) +
-                    frame.getBit((x-1) % xmax, y) + 
-                    frame.getBit((x+1) % xmax, y) +
-                    frame.getBit((x-1) % xmax, (y-1) % ymax) + 
-                    frame.getBit((x-1) % xmax, (y+1) % ymax) +
-                    frame.getBit((x+1) % xmax, (y-1) % ymax) + 
-                    frame.getBit((x+1) % xmax, (y+1) % ymax)
+                    frame.circularGetBit(x, (y-1) % ymax) + 
+                    frame.circularGetBit(x, (y+1) % ymax) +
+                    frame.circularGetBit((x-1) % xmax, y) + 
+                    frame.circularGetBit((x+1) % xmax, y) +
+                    frame.circularGetBit((x-1) % xmax, (y-1) % ymax) + 
+                    frame.circularGetBit((x-1) % xmax, (y+1) % ymax) +
+                    frame.circularGetBit((x+1) % xmax, (y-1) % ymax) + 
+                    frame.circularGetBit((x+1) % xmax, (y+1) % ymax)
                     )
                 //print(x, " ", y, " ", total)
     
@@ -63,23 +63,17 @@ getGlobalThis().GameOfLifeApp = class GameOfLifeApp extends LedApp {
                 if (frame.getBit(x, y) == 1) {
                     if ((total < 2) || (total > 3)) {
                         nextFrame.setBit(x, y, 0)
+                        //nextFrame.setXorBit(x, y, 1)
                     }
                 } else {
                     if (total === 3) {
                         nextFrame.setBit(x, y, 1)
-                        changes ++
+                        //nextFrame.setXorBit(x, y, 1)
                     }
                 }
             }
         }
         frame.copy(nextFrame)
-        /*
-        if (changes < 100) {
-            for (let i = 0; i < changes; i++) {
-                frame.addOneRandomOnBit()
-            }
-        }
-        */
 
         this.checkForLoop()
     }

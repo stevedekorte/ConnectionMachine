@@ -17,15 +17,20 @@ getGlobalThis().CA = class CA extends Base {
 
 
         this._width = 32
+
+        // rules  
+        // first 3 bits is are state of previous left, middle, and right bits
+        // last bit is for new state
+
         this._rules = [
-            [1, 1, 1, 0],
-            [1, 1, 0, 1],
-            [1, 0, 1, 0],
-            [1, 0, 0, 0],
-            [0, 1, 1, 0],
-            [0, 1, 0, 1],
+            [0, 0, 0, 1],
             [0, 0, 1, 1],
-            [0, 0, 0, 1]
+            [0, 1, 0, 1],
+            [0, 1, 1, 0],
+            [1, 0, 0, 0],
+            [1, 0, 1, 0],
+            [1, 1, 0, 1],
+            [1, 1, 1, 0]
         ]
 
         this._generation = 0
@@ -44,11 +49,11 @@ getGlobalThis().CA = class CA extends Base {
     }
 
     ruleString() {
-        const parts = []
+        let s = ""
         for (let i = 0; i < this._rules.length; i++) {
-            parts.append(str(this._rules[i][3]))
+            s += this._rules[i][3]
         }
-        return parts.join("")
+        return s
     }
 
     randomizeRules() {
@@ -103,7 +108,8 @@ getGlobalThis().CA = class CA extends Base {
 
     randomizeCells() {
         for (let i = 0; i < this._width; i++) {
-            this._cells[i] = Math.round(Math.random() * Math.random())
+            this._cells[i] = Math.round(Math.random())
+            //this._cells[i] = Math.round(Math.random() * Math.random())
         }
     }
 

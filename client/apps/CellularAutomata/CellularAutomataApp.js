@@ -3,40 +3,65 @@
 getGlobalThis().CellularAutomataApp = class CellularAutomata extends LedApp {
     constructor () {
         super()
-        this._ca = new CA()
+        this.newSlot("ca", new CA())
         this.setFps(1)
     }
 
     step () {
         super.step()
 
-        const ca = this._ca
+        if (this.t() % 15 != 1) {
+            return
+        }
+
+        const ca = this.ca()
         const xmax = this.frame().width()
         const ymax = this.frame().height()
         const frame = this.frame()
-
         
-        if (ca.generation() % 32 == 0) {
-            //ca.randomizeRules()
-            ca.mutateRules()
+
+        ca.mutateRules()
+        ca.randomizeCells()
+
+
+        frame.clear()
+
+        // draw rules at center top
+
+        const ruleString = ca.ruleString()
+
+        let x = Math.floor(xmax/2) - Math.floor(ruleString.length/2) - 1
+        frame.setBit(x, 0, 1); x ++
+        for (let i = 0; i < ruleString.length; i++) {
+            let b = ruleString[i] 
+            if (b === "1") {
+                frame.setBit(x, 0, 1)
+            }
+            x ++
+        }
+        frame.setBit(x, 0, 1)
+
+        // generate CA below
+
+        const y1 = 2
+
+        let s= ""
+        for (let y = y1; y < ymax - 1; y++) {
+
+            // copy cells to frame
+            for (let x = 0; x < xmax; x++) { 
+                const v = ca.cells()[x] ? 1 : 0
+                frame.setBit(x, y, v)
+                s += v
+                //console.log("set bit ", x, " ", y, " ", v)
+            }
+            s += "\n"
+
+            ca.generate()
         }
 
-        
-        if (ca.generation() % 32 == 1) {
-            ca.randomizeCells()
-            ca.mutateCells()
-        }
-
-        const y = ca.generation() % ymax
-
-        ca.generate()
-
-        // copy cells to frame
-        for (let x = 0; x < xmax; x++) { 
-            const v = ca.cells()[x] ? 1 : 0
-            frame.setBit(x, y, v)
-        }
-
+        console.log(s)
+        console.log("---")
         /*
         // copy cells from frame
         for (let x = 0; x < xmax; x++) {
@@ -44,6 +69,5 @@ getGlobalThis().CellularAutomataApp = class CellularAutomata extends LedApp {
             //console.log("frame:", frame.bits)
         }
         */
-    
     }
 }

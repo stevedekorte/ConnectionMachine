@@ -13,6 +13,7 @@ getGlobalThis().BrailleApp = class BrailleApp extends LedApp {
         this.newSlot("text", "") 
         this.registerForKeyboardInput()
         //this.setAlwaysNeedsDisplay(false)
+        this.newSlot("needsRender", false)
         this.setNeedsRender(true)
     }
 

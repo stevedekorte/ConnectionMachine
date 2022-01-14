@@ -22,6 +22,8 @@ if (!String.prototype.capitalized) {
     )
 }
 
+
+
 const byteToHex = [];
 
 for (let n = 0; n <= 0xff; ++n) {
@@ -114,6 +116,10 @@ class LedFrame extends Base {
     }
 
     hash () {
+        /*
+        can't use this digest because they are async and return promises
+        return  crypto.subtle.digest('SHA-1', this.bits())
+        */
         return this.bits().join("").hashCode()
     }
 
@@ -160,7 +166,7 @@ class LedFrame extends Base {
 
     setAllBitsTo (b) {
         const count = this.ledCount()
-        this._bits.fill(b)
+        this.bits().fill(b)
         return this
     }
 
@@ -171,43 +177,28 @@ class LedFrame extends Base {
     randomize () {
         const count = this.ledCount()
         for (let i = 0; i < count; i++) {
-            this._bits[i] = Math.round(Math.random()) * Math.round(Math.random()) //* Math.round(Math.random())
+            const v = Math.round(Math.random())
+            this.setBitAtIndex(i, v)
         }
     }
 
     randomizeBit (x, y) {
         const i = this.index_for_xy(x, y)
-        this.bits()[i] = Math.round(Math.random())
+        const v = Math.round(Math.random())
+        this.setBitAtIndex(i, v)
     }
 
     addOneRandomOnBit () {
         const i = Math.floor(Math.random() * this.ledCount())
-        this.bits()[i] = Math.round(Math.random() * Math.random())
+        const v = Math.round(Math.random())
+        this.setBitAtIndex(i, v)
     }
 
     asHexFrame () {
-
-        /*
-        function buf2hex(buffer) { // buffer is an ArrayBuffer
-            return [...new Uint8Array(buffer)]
-                .map(x => x.toString(16).padStart(2, '0'))
-                .join('');
-          }
-          */
-
-          
         const uint8 = this.bits().binaryToUint8()
         const out2 = hex(uint8)
         return out2
-/*
-        console.log("bits:  ", this.bits())
-        console.log("uint8: ", uint8)
-
-          //const out2 = uint8.reduce(function(memo, i) { return memo + ("0"+i.toString(16)).slice(-2); }, '');
-
-
-
-        
+        /*
         // TODO: this could be much faster
         const bits = this.bits()
         const hexChunks = []
@@ -229,16 +220,35 @@ class LedFrame extends Base {
 
     // --- xy utility methods ---
 
-    index_for_xy (x, y) {
+    circular_index_for_xy (x, y) {
         if (x < 0) {
             x = this._xmax + 1 + x
         }
         if (y < 0) {
             y = this._ymax + 1 + y
         }
-        x = x % this._xmax
-        y = y % this._ymax
+
         const index = (Math.floor(x) * this._xmax) + Math.floor(y)
+        return index
+    }
+
+    circularGetBit (x, y) {
+        const i = this.circular_index_for_xy(x, y)
+        return this._bits[i]
+    }
+
+
+    index_for_xy (x, y) {
+        if (x > this._xmax - 1 || x < 0) {
+            throw new Error("x coordinate " + x + " is out of bounds 0 to " + this._xmax)
+        }
+
+        if (y > this._ymax - 1 || y < 0) {
+            throw new Error("y coordinate " + y + " is out of bounds 0 to " + this._ymax)
+        }
+
+        const index = (Math.floor(x) * this._xmax) + Math.floor(y)
+
         return index
     }
 
@@ -247,7 +257,8 @@ class LedFrame extends Base {
     }
 
     setBitAtIndex (i, v) { // v should be 1 or 0
-        return this._bits[i]
+        this._bits[i] = v
+        return this
     }
 
     getBit (x, y) {
@@ -257,10 +268,10 @@ class LedFrame extends Base {
 
     flipBit (x, y) {
         const i = this.index_for_xy(x, y)
-        if (this._bits[i] === 0) {
-            this._bits[i] = 1
+        if (this.bits()[i] === 0) {
+            this.setBitAtIndex(i, 1)
         } else {
-            this._bits[i] = 0
+            this.setBitAtIndex(i, 0)
         }
     }
 
@@ -307,8 +318,8 @@ class LedFrame extends Base {
     }
 
     compositeOrOpFrame (frame) {
-        const bits1 = this._bits
-        const bits2 = frame._bits
+        const bits1 = this.bits()
+        const bits2 = frame.bits()
         const size = bits1.length
         for (let i = 0; i < size; i++) {
             bits1[i] = bits1[i] || bits2[i]
@@ -316,8 +327,8 @@ class LedFrame extends Base {
     }
 
     compositeAndOpFrame (frame) {
-        const bits1 = this._bits
-        const bits2 = frame._bits
+        const bits1 = this.bits()
+        const bits2 = frame.bits()
         const size = bits1.length
         for (let i = 0; i < size; i++) {
             bits1[i] = bits1[i] && bits2[i]
@@ -325,8 +336,8 @@ class LedFrame extends Base {
     }
 
     compositeXorOpFrame (frame) {
-        const bits1 = this._bits
-        const bits2 = frame._bits
+        const bits1 = this.bits()
+        const bits2 = frame.bits()
         const size = bits1.length
         for (let i = 0; i < size; i++) {
             bits1[i] = bits1[i] ^ bits2[i]
@@ -378,8 +389,8 @@ class LedFrame extends Base {
     }
 
     shiftXY (dx, dy) {
-        const xmax = this._xmax
-        const ymax = this._ymax
+        const xmax = this.width()
+        const ymax = this.height()
 
         const newFrame = new LedFrame()
         for (let y = 0; y < ymax; y++) {
@@ -395,7 +406,7 @@ class LedFrame extends Base {
                 newFrame.setBit(x, y, v)
             }
         }
-        this._bits = newFrame._bits
+        this._bits = newFrame.bits()
         return this
     }
 
@@ -424,8 +435,8 @@ class LedFrame extends Base {
 
 
     mirrorLeftToRight () {
-        const xmax = this._xmax
-        const ymax = this._ymax
+        const xmax = this.width()
+        const ymax = this.height()
 
         const newFrame = new LedFrame()
         for (let y = 0; y < ymax; y++) {
@@ -442,8 +453,8 @@ class LedFrame extends Base {
 
 
     mirrorTopToBottom () {
-        const xmax = this._xmax
-        const ymax = this._ymax
+        const xmax = this.width()
+        const ymax = this.height()
 
         const newFrame = new LedFrame()
         for (let y = 0; y < ymax/2 +1; y++) {
@@ -459,8 +470,8 @@ class LedFrame extends Base {
     }
 
     mirrorDiagonal () {
-        const xmax = this._xmax
-        const ymax = this._ymax
+        const xmax = this.width()
+        const ymax = this.height()
 
         const newFrame = new LedFrame()
         for (let y = 0; y < ymax/2 + 1; y++) {
