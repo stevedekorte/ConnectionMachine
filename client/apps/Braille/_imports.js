@@ -9,7 +9,7 @@ ResourceLoader.pushRelativePaths([
 
 
 ResourceLoader.pushDoneCallback( () => {
-    window.app = new BrailleApp()
-    window.app.run()
+    getGlobalThis().app = new BrailleApp()
+    getGlobalThis().app.run()
 })
 

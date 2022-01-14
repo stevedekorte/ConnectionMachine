@@ -1,6 +1,6 @@
 "use strict"
 
-window.CellularAutomataApp = class CellularAutomata extends LedApp {
+getGlobalThis().CellularAutomataApp = class CellularAutomata extends LedApp {
     constructor () {
         super()
         this._ca = new CA()

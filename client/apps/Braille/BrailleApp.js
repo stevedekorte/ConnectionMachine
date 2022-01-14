@@ -1,23 +1,19 @@
 "use strict"
 
-String.prototype.replaceAtIndex = function(_index, _newValue) {
-    if(_index > this.length-1) 
-    {
+String.prototype.replaceAtIndex = function(i, newValue) {
+    if (i > this.length-1) {
         return this.slice()
     }
-    else{
-        return this.substring(0,_index) + _newValue + this.substring(_index+1)
-    }
-}
+    return this.substring(0, i) + newValue + this.substring(i + 1)}
 
-window.BrailleApp = class BrailleApp extends LedApp {
+getGlobalThis().BrailleApp = class BrailleApp extends LedApp {
     constructor () {
         super()
         this.setFps(10)
-        this._text = "" //"I\nLOVE\nLINDA"
+        this.newSlot("text", "") 
         this.registerForKeyboardInput()
         //this.setAlwaysNeedsDisplay(false)
-        this._needsRender = true
+        this.setNeedsRender(true)
     }
 
     /*
@@ -36,14 +32,10 @@ window.BrailleApp = class BrailleApp extends LedApp {
     }
     */
 
-    text () {
-        return this._text
-    }
-
     setText (s) {
         if (this._text != s) {
             this._text = s
-            this._needsRender = true
+            this.setNeedsRender(true)
         }
        return this
     }
@@ -111,7 +103,7 @@ window.BrailleApp = class BrailleApp extends LedApp {
 
     dataForChar (c) {
         c = c.toUpperCase()
-        const data = window.brailleData.data
+        const data = getGlobalThis().brailleData.data
         return data[c]
     }
 
@@ -136,11 +128,11 @@ window.BrailleApp = class BrailleApp extends LedApp {
     autoWrite () {
         const charsPerScreen = 180
         
-        if (this._t % 200 === 0) {
+        if (this.t() % 200 === 0) {
             //this.clearText()
         }
 
-        if (this.text().length < charsPerScreen || this._t % 20 === 0) {
+        if (this.text().length < charsPerScreen || this.t() % 20 === 0) {
             const s = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789            "
             //const s = "LAB"
             //const s = "CAKMXU"
@@ -162,9 +154,9 @@ window.BrailleApp = class BrailleApp extends LedApp {
         
         this.autoWrite()
 
-        if (this._needsRender) {
+        if (this.needsRender()) {
             this.render()
-            this._needsRender = false
+            this.setNeedsRender(false)
         }
     }
 
@@ -180,8 +172,8 @@ window.BrailleApp = class BrailleApp extends LedApp {
         let vSpacing = 4
         let x = 0
         let y = charHeight
-        for (let i = 0; i < this._text.length; i++) {
-            const c = this._text[i]
+        for (let i = 0; i < this.text().length; i++) {
+            const c = this.text()[i]
             if (c == "\n") {
                 x = 0
                 y += charHeight + vSpacing

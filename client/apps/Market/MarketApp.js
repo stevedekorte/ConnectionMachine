@@ -22,27 +22,30 @@ Array.prototype.normalized = function () {
     return this.map(v => (v - minValue)/(maxValue - minValue))
 }
 
-window.MarketApp = class MarketApp extends LedApp {
+getGlobalThis().MarketApp = class MarketApp extends LedApp {
     constructor () {
-        super();
-        this._dataSource = new AlphaVantageAPI()
+        super()
+        this.newSlot("dataSource", new AlphaVantageAPI().setDelegate(this))
+        this.newSlot("currentY", null)
+        this.newSlot("needsRender", true)
 
-        this._dataSource.setDelegate(this)
-        //this._dataSource.connect()
+        this.newSlot("sparseData", new SparseMarketData())
+        this.newSlot("useLogScale", true)
+        this.newSlot("startDate",Date.parse("2011-01-01") )
+        this.newSlot("endDate", null )
 
-        this.setFps(5)
 
-        this._needsRender = true
 
-        this._sparseData = new SparseMarketData()
-        this._useLogScale = true
-        this._startDate = Date.parse("2017-01-01")
+        //this.dataSource().connect()
+
+        this.setFps(20)
+
         this.loadHistory()
         return this
     }
 
     loadHistory () {
-        const csvTable = new CsvTable().setCsvString(window.btcHistoryCsvString)
+        const csvTable = new CsvTable().setCsvString(getGlobalThis().btcHistoryCsvString)
         const json = csvTable.json()
         console.log(JSON.stringify(window.bitcoinHistoryJson, 2, 2))
         json.forEach(row => {
@@ -50,33 +53,38 @@ window.MarketApp = class MarketApp extends LedApp {
             row.endDate = row.date + 24*60*60*1000 // plus one day of milliseconds
             delete row.date
         })
-        this._sparseData.addEntries(json)
+        this.sparseData().addEntries(json)
     }
 
     step () {
         super.step()
-        if (this._needsRender) {
+        if (this.needsRender()) {
             this.render()
-            this._needsRender = false
+            this.setNeedsRender(false)
         }
-        if (this._currentY) {
+        if (this.currentY() !== null) {
             const xmax = this.frame().width()
             const ymax = this.frame().height()
-            let r = Math.round(Math.random())
-            //console.log(
-            this.frame().setXorBit(xmax-1, this._currentY, this._t % 2)
+            //let r = Math.round(Math.random())
+            const b = Math.floor(new Date(Date.now()).getSeconds()) % 2 ? 1:0
+            this.frame().setBit(xmax-2, this.currentY(), b)
         }
 
-        if (this._dataSource.hasData() && this._t % 2) {
-            this._startDate = this._startDate - 30*24*60*60*1000
-            this._needsRender = true
+        if (this.sparseData().entryCount() && this._t % 2) {
+            const firstDate = this.sparseData().entriesStartDate()
+            if (this.startDate() > firstDate) {
+                this.setStartDate(this.startDate() - 30*24*60*60*1000)
+                this.setNeedsRender(true)
+            } else {
+                this.setStartDate(firstDate - 24*60*60*1000)
+            }
         }
     }
 
     render () {
         this.frame().clear()
 
-        if (this._sparseData.entryCount() === 0) {
+        if (this.sparseData().entryCount() === 0) {
             return 
         }
 
@@ -85,16 +93,16 @@ window.MarketApp = class MarketApp extends LedApp {
         const sampleCount = xmax - 1
 
         const dayPeriod = 24*60*60*1000
-        //const startDate = this._startDate 
-        const startDate = this._sparseData.entriesStartDate() + dayPeriod
-        const endDate = this._sparseData.entriesEndDate() - dayPeriod
-		let entries = this._sparseData.entriesFromToCount(startDate, endDate, sampleCount)
+        const startDate = this.startDate() 
+        //const startDate = this.sparseData().entriesStartDate() + dayPeriod
+        const endDate = this.sparseData().entriesEndDate() - dayPeriod
+		let entries = this.sparseData().entriesFromToCount(startDate, endDate, sampleCount)
 
-        //let entries = this._sparseData.entriesWithCount(sampleCount)
-        //const entries = this._sparseData.entriesFromToCount(Date.parse("2019-05-31"), Date.parse("2022-01-11"), sampleCount) 
-        //const entries = this._sparseData.entriesFromToCount(Date.parse("2013-04-29"), Date.parse("2021-07-06"), sampleCount) 
+        //let entries = this.sparseData().entriesWithCount(sampleCount)
+        //const entries = this.sparseData().entriesFromToCount(Date.parse("2019-05-31"), Date.parse("2022-01-11"), sampleCount) 
+        //const entries = this.sparseData().entriesFromToCount(Date.parse("2013-04-29"), Date.parse("2021-07-06"), sampleCount) 
 
-        if (this._useLogScale) {
+        if (this.useLogScale()) {
             entries = entries.map(e => {
                 return {
                     startDate: e.startDate,
@@ -145,26 +153,25 @@ window.MarketApp = class MarketApp extends LedApp {
             const d = Date.parse(year, 0, 1)  // year tick 
             const x = Math.floor(sampleCount*(d - startDate)/(endDate - startDate))
             this.frame().setBit(x, ymax - 1, 1)
-            console.log("year: ", year, " x:", x)
+            //console.log("year: ", year, " x:", x)
         }
 
         // draw current price
-        const state = Math.floor(this._t / 100) % 2
+        const state = Math.floor(this.t() / 100) % 2
         const v = Math.floor(ymax * opens[opens.length -1])
-        console.log("v =", v)
-        this._currentY = ymax-1 - v
-        this.frame().setBit(xmax, ymax-1 - this._currentY, 0)
-
-
+        //console.log("v =", v)
+        this.setCurrentY(ymax-1 - v)
+        this.frame().setBit(xmax, ymax-1 - this.currentY(), 0)
+        return this
     }
 
     onChange (dataSource) {
-        this._needsRender = true
+        this.setNeedsRender(true)
 	}
 
     onNewEntries (rows) {
-        this._sparseData.addEntries(rows)
-        this._needsRender = true
+        this.sparseData().addEntries(rows)
+        this.setNeedsRender(true)
     }
 }
 

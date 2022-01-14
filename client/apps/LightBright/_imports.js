@@ -8,7 +8,7 @@ ResourceLoader.pushRelativePaths([
 
 
 ResourceLoader.pushDoneCallback( () => {
-    window.app = new LightBrightApp()
-    window.app.run()
+    getGlobalThis().app = new LightBrightApp()
+    getGlobalThis().app.run()
 })
 

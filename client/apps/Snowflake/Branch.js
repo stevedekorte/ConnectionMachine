@@ -1,6 +1,6 @@
 "use strict"
 
-window.Branch = class Branch {
+getGlobalThis().Branch = class Branch {
     constructor () {
         this._angle = -90
         //this._direction = new Point2d().set(1, 1)

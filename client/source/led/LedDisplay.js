@@ -1,35 +1,20 @@
 "use strict"
 
-class LedDisplay {
+class LedDisplay extends Base {
 	constructor () {
-		this._socket = null
-		//this._host = "cm2.local"
-		this._host = "192.168.4.185"
-		this._port = 13254
-		this._frame = new LedFrame()
-		this._delegate = null
-		this._isConnected = false
-		this._brightness = 1
-		this._autoBrightness = true
-		this._isSecure = false
-	}
+		super()
+		this.newSlot("socket", null)
+		this.newSlot("host", "192.168.4.185")
+		//this.newSlot("host", "cm2.local")
 
-	isConnected () {
-		return this._isConnected
-	}
+		this.newSlot("port", 13254)
+		this.newSlot("frame", new LedFrame())
+		this.newSlot("delegate", null)
+		this.newSlot("isConnected", false)
 
-	setIsConnected (bool) {
-		this._isConnected = bool
-		return this
-	}
-
-	setDelegate (obj) {
-		this._delegate = obj
-		return this
-	}
-
-	frame () {
-		return this._frame
+		this.newSlot("brightness", 1)
+		this.newSlot("autoBrightness", true)
+		this.newSlot("isSecure", false)
 	}
 
 	run () {
@@ -38,7 +23,7 @@ class LedDisplay {
 	}
 
 	protocol () {
-		if (this._isSecure) {
+		if (this.isSecure()) {
 			return "wss"
 		}
 		return "ws"
@@ -57,7 +42,7 @@ class LedDisplay {
 			socket.onmessage = (event) => this.onMessage(event)
 			socket.onerror = (event) => this.onError(event)
 			socket.onclose =(event) => this.onClose(event)
-			this._socket = socket
+			this.setSocket(socket)
 		} catch (e) {
 			console.log("websocket connect error ", e)
 		}
@@ -67,7 +52,7 @@ class LedDisplay {
 	onOpen (event) {
 		this.log("onOpen()")
 		this.setIsConnected(true)
-		this._delegate.onLedDisplayOpen(this)
+		this.delegate().onLedDisplayOpen(this)
 	};
 
 	onMessage (event) {
@@ -86,7 +71,7 @@ class LedDisplay {
 	}
 
 	currentBrightness () {
-		if (this._autoBrightness) {
+		if (this.autoBrightness()) {
 			const d = new Date()
 			const h = d.getHours()
 			if (h > 7 && h < 22) {
@@ -94,18 +79,17 @@ class LedDisplay {
 			}
 			return 0
 		} 
-		return this._brightness
+		return this.brightness90
 	}
 
 	render () {
 		if (this.isConnected()) {
 			const json = {
-				frame: this._frame.asHexFrame(),
+				frame: this.frame().asHexFrame(),
 				brightness: this.currentBrightness()
 			}
 			const s = JSON.stringify(json)
 			this.rawSend(s)
-			//console.log("this._brightness = ",  this._brightness)
 		}
 	}
 
@@ -122,13 +106,9 @@ class LedDisplay {
 		return this
 	}
 
-	brightness () {
-		return this._brightness
-	}
-
 	rawSend (s) {
 		//this.log("sending: [" + s + "]")
-		this._socket.send(s);
+		this.socket().send(s)
 	}
 
 	log (msg) {

@@ -1,4 +1,4 @@
-window.brailleData = {
+getGlobalThis().brailleData = {
 	"description" : "braille",
 		"data" : {
 			" " : [[0, 0], [0, 0], [0, 0]],

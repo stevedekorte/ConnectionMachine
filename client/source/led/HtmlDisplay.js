@@ -1,7 +1,8 @@
 "use strict"
 
-class HtmlDisplay {
+class HtmlDisplay extends Base {
 	constructor () {
+		super()
 		const e = document.createElement("div")
 		this._element = e
 		e.style.padding = "60px"
@@ -93,7 +94,7 @@ class HtmlDisplay {
 
 		const e = this._element
 		e.style.display = "table"
-		e.style.border = "1px solid #222"
+		//e.style.border = "1px solid #222"
 
 		e.style.width = this.displayWidth() + "px"
 		e.style.maxWidth = this.displayWidth() + "px"

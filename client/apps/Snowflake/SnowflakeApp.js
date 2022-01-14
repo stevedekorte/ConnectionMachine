@@ -1,6 +1,6 @@
 "use strict"
 
-window.SnowflakeApp = class SnowflakeApp extends LedApp {
+getGlobalThis().SnowflakeApp = class SnowflakeApp extends LedApp {
     constructor () {
         super()
         this.display().setBrightness(15)

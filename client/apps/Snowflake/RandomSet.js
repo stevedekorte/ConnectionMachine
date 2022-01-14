@@ -1,6 +1,6 @@
 "use strict"
 
-window.RandomSet = class RandomSet {
+getGlobalThis().RandomSet = class RandomSet {
     constructor () {
         this._dict = {}
     }
@@ -26,4 +26,4 @@ window.RandomSet = class RandomSet {
     }
 }
 
-window.globalRandomSet = new RandomSet()
+getGlobalThis().globalRandomSet = new RandomSet()

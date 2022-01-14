@@ -4,7 +4,7 @@
 
 */
 
-window.ParticlesAnimation = class ParticlesAnimation extends Animation {
+getGlobalThis().ParticlesAnimation = class ParticlesAnimation extends Animation {
     constructor() {
         super()
         this.setTMax(null)

@@ -10,7 +10,7 @@ ResourceLoader.pushRelativePaths([
 
 
 ResourceLoader.pushDoneCallback( () => {
-    window.app = new BtcApp()
-    window.app.run()
+    getGlobalThis().app = new BtcApp()
+    getGlobalThis().app.run()
 })
 

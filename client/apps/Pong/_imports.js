@@ -5,7 +5,7 @@ ResourceLoader.pushRelativePaths([
 ]);
 
 ResourceLoader.pushDoneCallback( () => {
-    window.app = new CellularAutomataApp()
-    window.app.run()
+    getGlobalThis().app = new CellularAutomataApp()
+    getGlobalThis().app.run()
 })
 

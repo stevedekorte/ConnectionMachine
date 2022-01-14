@@ -1,7 +1,7 @@
 "use strict"
 
 
-window.LineDownAnimation = class LineDownAnimation extends LineAnimation {
+getGlobalThis().LineDownAnimation = class LineDownAnimation extends LineAnimation {
     constructor() {
         super()
         this.setTMax(this.frame().height() - 1)

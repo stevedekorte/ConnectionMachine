@@ -4,7 +4,7 @@
     subclass this class to make custom Led apps
 */
 
-window.BtcApp = class BtcApp extends LedApp {
+getGlobalThis().BtcApp = class BtcApp extends LedApp {
     constructor () {
         super();
         //this._btcData = new BitcoinExplorerAPI()
@@ -18,7 +18,7 @@ window.BtcApp = class BtcApp extends LedApp {
         this.setFps(30)
         this._utxs = []
         this._count = 0
-        this._needsRender = true
+        this.setNeedsRender(true)
 
         return this
     }
@@ -93,12 +93,12 @@ window.BtcApp = class BtcApp extends LedApp {
 
     onBlockMessage (json) {
         this._count = 0
-        this._needsRender = true
+        this.setNeedsRender(true)
 	}
 
 	onUnconfirmedTxMessage (json) {
         //this._count += json.x.inputSum // satoshis
-        this._needsRender = true
+        this.setNeedsRender(true)
         //this.frame().clear()
     }
 

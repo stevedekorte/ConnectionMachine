@@ -1,6 +1,6 @@
 "use strict"
 
-window.LineUpAnimation = class LineUpAnimation extends LineAnimation {
+getGlobalThis().LineUpAnimation = class LineUpAnimation extends LineAnimation {
     constructor() {
         super()
         this.setTMax(this.frame().height() - 1)

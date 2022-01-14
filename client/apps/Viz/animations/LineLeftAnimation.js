@@ -1,7 +1,7 @@
 "use strict"
 
 
-window.LineLeftAnimation = class LineLeftAnimation extends LineAnimation {
+getGlobalThis().LineLeftAnimation = class LineLeftAnimation extends LineAnimation {
     constructor() {
         super()
         this.setTMax(this.frame().width() - 1)

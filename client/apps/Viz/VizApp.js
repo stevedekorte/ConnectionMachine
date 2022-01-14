@@ -6,7 +6,7 @@
 
 //import "RandomAnimation.js"
 
-window.VizApp = class VizApp extends LedApp {
+getGlobalThis().VizApp = class VizApp extends LedApp {
     constructor () {
         super()
         this.setFps(30)
@@ -104,8 +104,8 @@ window.VizApp = class VizApp extends LedApp {
     }
 }
 
-window.app = new window.VizApp()
-window.app.run()
+getGlobalThis().app = new VizApp()
+getGlobalThis().app.run()
 
 /*
 applyXYFunc (func) {

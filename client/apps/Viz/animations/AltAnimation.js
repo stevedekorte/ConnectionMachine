@@ -1,7 +1,7 @@
 "use strict"
 
 
-window.AltAnimation = class AltAnimation extends LineAnimation {
+getGlobalThis().AltAnimation = class AltAnimation extends LineAnimation {
     constructor() {
         super()
         this.setTMax(10)

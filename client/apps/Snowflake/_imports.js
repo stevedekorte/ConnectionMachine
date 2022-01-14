@@ -7,7 +7,7 @@ ResourceLoader.pushRelativePaths([
 ]);
 
 ResourceLoader.pushDoneCallback( () => {
-    window.app = new SnowflakeApp()
-    window.app.run()
+    getGlobalThis().app = new SnowflakeApp()
+    getGlobalThis().app.run()
 })
 

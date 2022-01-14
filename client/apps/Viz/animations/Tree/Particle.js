@@ -1,13 +1,13 @@
 "use strict"
 
 
-window.Thing = class Thing {
+getGlobalThis().Thing = class Thing {
     constructor() {
         return this
     }
 }
 
-window.Particle = class Particle extends Thing {
+getGlobalThis().Particle = class Particle extends Thing {
     constructor() {
         super()
         this._intPosition = new Point2d()

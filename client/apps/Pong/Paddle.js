@@ -1,6 +1,6 @@
 "use strict"
 
-window.Paddle = class Paddle extends Thing {
+getGlobalThis().Paddle = class Paddle extends Thing {
     constructor () {
         super()
     }

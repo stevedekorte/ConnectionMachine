@@ -1,24 +1,14 @@
 
-class CsvTable {
+class CsvTable extends Base {
 	constructor () {
-		this._json = null
-	}
-
-	setColumnNames (names) {
-		this._columnNames = names
-		return this
-	}
-
-	columnNames () {
-		return this._columnNames
-	}
-
-	json () {
-		return this._json
+		super()
+		this.newSlot("columnNames", null)
+		this.newSlot("json", null)
+		this.newSlot("", )
 	}
 
 	setCsvString (csv) {
-		this._json = this.jsonForCsvString(csv)
+		this.setJson(this.jsonForCsvString(csv))
 		return this
 	}
 

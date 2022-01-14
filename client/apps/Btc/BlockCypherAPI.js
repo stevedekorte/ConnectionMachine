@@ -10,7 +10,7 @@
 
 */
 
-window.BlockCypherAPI = class BlockCypherAPI {
+getGlobalThis().BlockCypherAPI = class BlockCypherAPI {
 	constructor () {
 		this._socket = null
 		this._protocol = "wss"

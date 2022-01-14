@@ -2,7 +2,7 @@
 
 console.log("CA")
 
-window.CA = class CA extends Base {
+getGlobalThis().CA = class CA extends Base {
     constructor() {
         super()
         // interesting rules sets

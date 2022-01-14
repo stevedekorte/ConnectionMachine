@@ -13,28 +13,58 @@
 
 */
 
-window.SparseMarketData = class SparseMarketData {
-	static shared () {
-		if (!this._shared) {
-			this._shared = new SparseMarketData()
+Object.defineProperty(Array.prototype, "binarySearch", {
+	value: function (target, comparator) {
+		var l = 0,
+			h = this.length - 1,
+			m, comparison;
+		comparator = comparator || function (a, target) {
+			return (a < target ? -1 : (a > target ? 1 : 0));
+		};
+		while (l <= h) {
+			m = (l + h) >>> 1;
+			comparison = comparator(this[m], target);
+			if (comparison < 0) {
+				l = m + 1;
+			} else if (comparison > 0) {
+				h = m - 1;
+			} else {
+				return m;
+			}
 		}
-		return this._shared
+		return m; // nearest match?
+		//return~l;
 	}
+});
+
+Object.defineProperty(Array.prototype, "binaryInsert", {
+	value: function (target, duplicate, comparator) {
+		var i = this.binarySearch(target, comparator);
+		if (i >= 0) {
+			if (!duplicate) {
+				return i;
+			}
+		} else {
+			i = ~i;
+		}
+		this.splice(i, 0, target);
+		return i;
+	}
+});
+
+// -------------------------------------------------------
+
+
+getGlobalThis().SparseMarketData = class SparseMarketData extends Base {
 
 	constructor() {
-		this._series = []
-
-		// date compare function
-		this._compareFunc = this.defaultCompareFunc()
-
-		//this.addCsvString(window.btcHistoryCsvString)
+		super()
+		this.newSlot("series", [])
+		this.newSlot("compareFunc", this.defaultCompareFunc()) // date compare function
+		//this.addCsvString(getGlobalThis().btcHistoryCsvString)
 	}
 
-	series () {
-		return this._series
-	}
-
-	defaultCompareFunc () {
+	defaultCompareFunc() {
 		return function (a, b) {
 			if (!a.startDate || !b.startDate) {
 				throw new Errror("invalid date")
@@ -48,12 +78,12 @@ window.SparseMarketData = class SparseMarketData {
 		}
 	}
 
-	sort () {
-		this._series.sort(this._compareFunc)
+	sort() {
+		this.series().sort(this.compareFunc())
 		return this
 	}
 
-	addEntries (json) {
+	addEntries(json) {
 		json.forEach((row) => {
 			this.addEntry(row)
 		})
@@ -61,30 +91,30 @@ window.SparseMarketData = class SparseMarketData {
 		console.log("after addEntries entries date range ", new Date(this.entriesStartDate()), " -> ", new Date(this.entriesEndDate()))
 	}
 
-	addEntry (json) {
-		this._series.push(json)
+	addEntry(json) {
+		this.series().push(json)
 		return this
 	}
 
-	entryCount () {
-		return this._series.length
+	entryCount() {
+		return this.series().length
 	}
 
-	entriesStartDate () {
-		return this._series[0].startDate + 1000
+	entriesStartDate() {
+		return this.series()[0].startDate + 1000
 	}
 
-	entriesEndDate () {
-		return this._series[this._series.length-1].startDate - 1000
+	entriesEndDate() {
+		return this.series()[this.series().length - 1].startDate - 1000
 	}
 
-	entriesWithCount (count) {
+	entriesWithCount(count) {
 		return this.entriesFromToCount(this.entriesStartDate(), this.entriesEndDate(), count)
 	}
 
-	entriesFromToCount (startDate, endDate, count) {
-		console.log("entriesFromToCount ", new Date(startDate), " -> ", new Date(endDate))
-		console.log("entries date range ", new Date(this.entriesStartDate()), " -> ", new Date(this.entriesEndDate()))
+	entriesFromToCount(startDate, endDate, count) {
+		//console.log("entriesFromToCount ", new Date(startDate), " -> ", new Date(endDate))
+		//console.log("entries date range ", new Date(this.entriesStartDate()), " -> ", new Date(this.entriesEndDate()))
 		if (startDate > endDate) {
 			throw new Error("startDate > endDate")
 		}
@@ -92,8 +122,8 @@ window.SparseMarketData = class SparseMarketData {
 		const period = (endDate - startDate)
 		const entries = []
 		for (let i = 0; i < count; i++) {
-			const d1 = startDate + period * ((i+0)/count)
-			const d2 = startDate + period * ((i+1)/count)
+			const d1 = startDate + period * ((i + 0) / count)
+			const d2 = startDate + period * ((i + 1) / count)
 			//const entry = this.bestForDateRange(d1, d2)
 			const entry = this.constructEntryForDateRange(d1, d2)
 			entries.push(entry)
@@ -101,13 +131,17 @@ window.SparseMarketData = class SparseMarketData {
 		return entries
 	}
 
-	constructEntryForDateRange (startDate, endDate) {
+	constructEntryForDateRange(startDate, endDate) {
 		const entries = this.entriesContainingDateRange(startDate, endDate)
 		const newEntry = {
 			startDate: startDate,
 			endDate: endDate,
 			low: Number.POSITIVE_INFINITY,
 			high: Number.NEGATIVE_INFINITY
+		}
+
+		if (entries.length === 0) {
+			throw new Error("no entries matching date range: " + new Date(startDate) + " -> " + new Date(endDate))
 		}
 
 		newEntry.open = entries[0].open
@@ -127,41 +161,70 @@ window.SparseMarketData = class SparseMarketData {
 			if (entry.endDate >= newEntry.endDate) {
 				newEntry.close = entry.close
 			}
-			
+
 		})
 
 		return newEntry
 	}
 
-	bestForDateRange (startDate, endDate) {
+	bestForDateRange(startDate, endDate) {
 		const entries = this.entriesContainingDateRange(startDate, endDate)
 		let bestEntry = null
 		let bestLength = null
-		entries.forEach((entry) => {
+
+		entries.every((entry) => {
 			const length = endDate - startDate
 			if (bestEntry === null || length < bestLength) {
 				bestEntry = entry
 				bestLength = length
 			}
+			// since entries are sorted by startDate, we can bail once we reach a later endDate entry
+			if (entry.startDate > endDate) {
+				return false
+			}
+			return true
 		})
 		return bestEntry
 	}
 
-	entriesContainingDateRange (startDate, endDate) {
+	//binarySearch 
+	entriesContainingDateRange(startDate, endDate) {
 		// we want an overlapping entry with the smallest span
 		const series = this.series()
 		const matches = []
 
-		for (let i = 0; i < series.length; i++) {
+		//- 24*60*60*1000
+		let startIndex = series.binarySearch(startDate, (a, target) => {
+			return (a.startDate < target ? -1 : (a.startDate > target ? 1 : 0));
+		})
+
+		//console.log("startIndex: ", startIndex)
+
+		let i = 0
+		for (i = startIndex; i < series.length; i++) {
 			const entry = series[i]
-			if (entry.startDate >= startDate && entry.endDate <= endDate) { 
+			if (entry.startDate >= startDate && entry.endDate <= endDate) {
 				// do we want to exclude by end date?
 				matches.push(entry)
 			}
+
+			// since entries are sorted by startDate, we can bail once we reach a later endDate entry
+			if (entry.startDate > endDate) {
+				break
+			}
 		}
+
+		/*
+		console.log("search: " + startIndex + "-" + i, " = ", (i - startIndex) + "/" + series.length + " ", Math.floor(100*(i - startIndex)/series.length) + "%")
+
+		if (matches.length) {
+			const d1 = new Date(matches[0].startDate)
+			const d2 = new Date(matches[matches.length - 1].startDate)
+			console.log("dates: ", d1.getFullYear() + "-" + d1.getMonth(), " to ", d2.getFullYear() + "-" + d2.getMonth())
+		}
+		*/
+
 		return matches
 	}
-
-
 }
 

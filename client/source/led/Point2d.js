@@ -1,35 +1,16 @@
 "use strict"
 
-window.Point2d = class Point2d {
+getGlobalThis().Point2d = class Point2d extends Base {
     constructor() {
-        this._x = 0
-        this._y = 0
+        super()
+        this.newSlot("x", 0)
+        this.newSlot("y", 0)
         return this
     }
 
     set (x, y) {
         this.setX(x)
         this.setY(y)
-        return this
-    }
-
-    x() {
-        return this._x
-    }
-
-    y() {
-        return this._y
-    }
-
-    setX(v) {
-        this._x = v
-        //this._x = Math.round(v)
-        return this
-    }
-
-    setY(v) {
-        this._y = v
-        //this._y = Math.round(v)
         return this
     }
 

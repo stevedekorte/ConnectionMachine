@@ -1,50 +1,36 @@
 "use strict"
 
-window.BitcoinExplorerAPI = class BitcoinExplorerAPI {
+getGlobalThis().BitcoinExplorerAPI = class BitcoinExplorerAPI {
 	constructor () {
-		this._delegate = null
+		this.newSlot("delegate", null)
 
-		//this._utxs = []
-		//this._utxSet = new Set()
-		this._blocksDict = {}
-		this._blocks = []
+		this.newSlot("utxs", [])
+		this.newSlot("utxSet", new Set())
+		this.newSlot("blocksDict", {})
+		this.newSlot("blocks", [])
 
-		//this._storage = new Storage()
-	}
-
-	blocks () {
-		return this._blocks
+		//this.newSlot("storage", new Storage())
 	}
 
 	getBlockForHash (blockHash) {
-		return this._blocksSet[blockHash]
+		return this.blocksDict()[blockHash]
 	}
 
 	setBlockForHash (blockHash, block) {
-		this._blocksDict[blockHash] = block
+		this.blocksDict()[blockHash] = block
 		this.updateBlocks()
 		return this
 	}
 
 	updateBlocks () {
-		const blocks = Object.values(this._blocksDict)
+		const blocks = Object.values(this.blocksDict())
 		blocks.sort( (a, b) => a.height > b.height )
-		this._blocks = blocks
+		this.setBlocks(blocks)
 		return this
-	}
-
-
-	utxDict () {
-		return this._utxDict
 	}
 
 	utxCount () {
-		return Object.keys(this._utxDict).length
-	}
-
-	setDelegate (obj) {
-		this._delegate = obj
-		return this
+		return Object.keys(this.utxDict()).length
 	}
 
 	connect () {
@@ -74,7 +60,7 @@ window.BitcoinExplorerAPI = class BitcoinExplorerAPI {
 	onBlock (data) {
 		const json = JSON.parse(data)
 		this.setBlockForHash(json.hash, json)
-		this._delegate.onBlock(json)
+		this.delegate().onBlock(json)
 	}
 	
 	fetch (url, callback) {

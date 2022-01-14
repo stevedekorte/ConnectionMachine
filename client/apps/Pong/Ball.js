@@ -1,6 +1,6 @@
 "use strict"
 
-window.Ball = class Ball extends Thing {
+getGlobalThis().Ball = class Ball extends Thing {
     constructor () {
         super()
         this._position = new Point2d()

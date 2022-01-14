@@ -4,7 +4,7 @@
 
 */
 
-window.Animation = class Animation {
+getGlobalThis().Animation = class Animation {
     constructor () {
         this._tMax = 100
         this._t = 0

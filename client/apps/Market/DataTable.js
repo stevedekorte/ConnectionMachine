@@ -4,9 +4,10 @@ String.prototype.contains = function (s) {
 	return this.indexOf(s) != -1
 }
 
-window.DataTable = class DataTable {
+getGlobalThis().DataTable = class DataTable extends Base {
 	constructor () {
-		this._json = null
+		super()
+		this.newSlot("json", null)
 		//this._storage = new Storage()
 	}
 
@@ -15,11 +16,11 @@ window.DataTable = class DataTable {
 	}
 
 	hasData () {
-		return this._json != null
+		return this.json() != null
 	}
 
 	rows () {
-		return this._json.rows
+		return this.json().rows
 	}
 
 	stringToNumberIfNeeded (cell) {
@@ -31,13 +32,13 @@ window.DataTable = class DataTable {
 	}
 
 	rowsName () {
-		return Object.keys(this._json).filter(k => k.startsWith("Time Series"))[0]
+		return Object.keys(this.json()).filter(k => k.startsWith("Time Series"))[0]
 	}
 
 	setFromJson (json) {
 		// TODO: add dates to rows
-		this._json = json
-		const rowsDict = this._json[this.rowsName()]
+		this.setJson(json)
+		const rowsDict = this.json()[this.rowsName()]
 		const sortedKeys = Object.keys(rowsDict).sort()
 		
 		const date1 = sortedKeys.slice().shift()
@@ -64,38 +65,5 @@ window.DataTable = class DataTable {
 		json.rows = rows
 		return this
 	}
-
-	/*
-	setFromCvsString (s) {
-		const lines = s.split("\r\n")
-		const rows = lines.map(line => { 
-			let cells = line.split(",")
-			let strippedCells = cells.map(cell => cell.trim()) 
-			strippedCells = strippedCells.map(cell => {
-				let n = parseFloat(cell)
-				if (Number.isNaN(n)) {
-					return cell
-				}
-				return n
-			})
-			return strippedCells
-		})
-		this._headers = rows.shift()
-		this._rows = rows
-		return this
-	}
-
-	lineForRow (row) {
-		return row.join(", ") + "\r\n"
-	}
-
-	asString () {
-		const allRows = []
-		allRows.append(this._headers)
-		this._rows.forEach(row => allRows.push(row))
-		const s = allRows.map(row => this.lineForRow(rows)).join("\r\n")
-		return s
-	}
-*/
 }
 

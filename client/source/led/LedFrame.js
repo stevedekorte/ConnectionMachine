@@ -22,6 +22,60 @@ if (!String.prototype.capitalized) {
     )
 }
 
+const byteToHex = [];
+
+for (let n = 0; n <= 0xff; ++n) {
+    const hexOctet = n.toString(16).padStart(2, "0");
+    byteToHex.push(hexOctet);
+}
+
+function hex(buff) {
+    //const buff = new Uint8Array(arrayBuffer);
+    const hexOctets = []; // new Array(buff.length) is even faster (preallocates necessary array size), then use hexOctets[i] instead of .push()
+
+    /*
+    for (let i = 0; i < buff.length; ++i) {
+        hexOctets.push(byteToHex[buff[i]]);
+    }
+
+    return hexOctets.join("");
+    */
+    let out = ""
+    for (let i = 0; i < buff.length; ++i) {
+        out += byteToHex[buff[i]];
+    }
+
+    return out;
+}
+
+
+Uint8Array.prototype.binaryToUint8 = function () {
+    // convert a byte array where each byte only holds one bit, into a uint8 array
+    const outBitsPerByte = 8 // since we're converting to hex?
+    const out = new Uint8Array(Math.ceil(this.length/outBitsPerByte))
+    let outByteIndex = 0
+    let outBitIndex = 0
+    let currentByte = 0
+    for (let i = 0; i < this.length; i++) {
+        let b = this[i]
+        if (b) {
+            const v = 1 << 7 - outBitIndex
+            currentByte = currentByte | v
+        }
+
+        outBitIndex ++
+        if (outBitIndex == outBitsPerByte) {
+            out[outByteIndex] = currentByte
+            currentByte = 0
+            outBitIndex = 0
+            outByteIndex ++
+        }
+    }
+    return out
+}
+
+
+
 // ----------------
 
 Array.prototype.remove = function(v) {
@@ -43,11 +97,14 @@ String.prototype.hashCode = function() {
 }
 
 
-class LedFrame {
+class LedFrame extends Base {
     constructor () {
-        this._xmax = 32
-        this._ymax = 32
-        this._bits = Array(this.ledCount()).fill(0) 
+        super()
+        this.newSlot("xmax", 32)
+        this.newSlot("ymax", 32)
+       // this.newSlot("bits", Array(this.ledCount()).fill(0))
+        this.newSlot("bits", new Uint8Array(this.ledCount()).fill(0))
+
     }
 
     duplicate () {
@@ -57,20 +114,19 @@ class LedFrame {
     }
 
     hash () {
-        return this._bits.join("").hashCode()
-    }
-
-    bits () {
-        return this._bits
+        return this.bits().join("").hashCode()
     }
 
     equals (frame) {
-        if (this.bits().length != frame.bits().length) {
+        const bits = this.bits()
+        const otherBits = frame.bits()
+
+        if (bits.length != otherBits.bits().length) {
             return false
         }
 
-        for (let i = 0; i < this._bits.length; i++) {
-            if (this._bits[i] != frame.bits()[i]) {
+        for (let i = 0; i < bits.length; i++) {
+            if (bits[i] != otherBits[i]) {
                 return false
             }
         }
@@ -79,20 +135,21 @@ class LedFrame {
 
     trueBitCount () {
         let count = 0
-        this._bits.forEach((b) => { if (b === 1) { count ++ }})
+        this.bits().forEach((b) => { if (b === 1) { count ++ }})
         return count
     }
 
     width () {
-        return this._xmax
+        return this.xmax()
     }
 
     height () {
-        return this._ymax
+        return this.ymax()
     }
 
     clear () {
         this.setAllBitsTo(0)
+        return this
     }
 
     duplicate () {
@@ -104,10 +161,11 @@ class LedFrame {
     setAllBitsTo (b) {
         const count = this.ledCount()
         this._bits.fill(b)
+        return this
     }
 
     ledCount () {
-        return this._xmax * this._ymax
+        return this.xmax() * this.ymax()
     }
 
     randomize () {
@@ -119,16 +177,39 @@ class LedFrame {
 
     randomizeBit (x, y) {
         const i = this.index_for_xy(x, y)
-        this._bits[i] = Math.round(Math.random())
+        this.bits()[i] = Math.round(Math.random())
     }
 
     addOneRandomOnBit () {
         const i = Math.floor(Math.random() * this.ledCount())
-        this._bits[i] = Math.round(Math.random() * Math.random())
+        this.bits()[i] = Math.round(Math.random() * Math.random())
     }
 
     asHexFrame () {
-        const bits = this._bits
+
+        /*
+        function buf2hex(buffer) { // buffer is an ArrayBuffer
+            return [...new Uint8Array(buffer)]
+                .map(x => x.toString(16).padStart(2, '0'))
+                .join('');
+          }
+          */
+
+          
+        const uint8 = this.bits().binaryToUint8()
+        const out2 = hex(uint8)
+        return out2
+/*
+        console.log("bits:  ", this.bits())
+        console.log("uint8: ", uint8)
+
+          //const out2 = uint8.reduce(function(memo, i) { return memo + ("0"+i.toString(16)).slice(-2); }, '');
+
+
+
+        
+        // TODO: this could be much faster
+        const bits = this.bits()
         const hexChunks = []
         const bitChunks = []
         for (let n = 0; n < bits.length / 4; n++) {
@@ -139,8 +220,11 @@ class LedFrame {
             hexChunks.push(hexChunk)
         }
         const out = hexChunks.join("")
-        //console.log("out: ", out)
-        return out
+        console.log("out1: ", out)
+        console.log("out2: ", out2)
+        //throw "stop"
+        return out2
+        */
     }
 
     // --- xy utility methods ---

@@ -8,7 +8,7 @@ ResourceLoader.pushRelativePaths([
 
 
 ResourceLoader.pushDoneCallback( () => {
-    window.app = new EqualizerApp()
-    window.app.run()
+    getGlobalThis().app = new EqualizerApp()
+    getGlobalThis().app.run()
 })
 

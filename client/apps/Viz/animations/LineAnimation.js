@@ -3,7 +3,7 @@
 
 // --------------------------------------------
 
-window.LineAnimation = class LineAnimation extends Animation {
+getGlobalThis().LineAnimation = class LineAnimation extends Animation {
     constructor() {
         super()
         this.setTMax(this.frame().width())

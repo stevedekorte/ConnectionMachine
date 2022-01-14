@@ -1,9 +1,9 @@
 "use strict"
 
-window.GameOfLifeApp = class GameOfLifeApp extends LedApp {
+getGlobalThis().GameOfLifeApp = class GameOfLifeApp extends LedApp {
     constructor () {
         super()
-        this.setFps(120)
+        this.setFps(10)
 
         const frame = this.frame()
         frame.randomize()

@@ -4,67 +4,39 @@
     subclass this class to make custom Led apps
 */
 
-class LedApp {
+class LedApp extends Base {
     constructor () {
-        this._fps = 1
-        this._frame = new LedFrame()
+        super()
+        this.newSlot("fps", 1)
+        this.newSlot("frame", new LedFrame())
+        this.newSlot("display", new LedDisplay().setDelegate(this))
+        this.newSlot("htmlDisplay", new HtmlDisplay().setDelegate(this))
+        this.htmlDisplay().setup()
 
-        this._display = new LedDisplay()
-        this._display.setDelegate(this)
-
-        this._htmlDisplay = new HtmlDisplay()
-        this._htmlDisplay.setDelegate(this)
-        this._htmlDisplay.setup()
-
-        this._alwaysNeedsDisplay = true
-        this._needsDisplay = true
-        //this._needsRender = true
-        this._t = 0
-
-        /*
-        this.keyboard = Keyboard()
-        this.keyboard.setDelegate(this)
-        this.keyboard.startListening()
-        */
+        this.newSlot("alwaysNeedsDisplay", true)
+        this.newSlot("needsDisplay", true)
+        //this.newSlot("needsRender", true)
+        this.newSlot("t", 0)
 
         this.display().setBrightness(0)
+
+        this.newSlot("startTime", null)
+        this.newSlot("endTime", null)
+
         //this.frame().setAllBitsTo(1)
         //this.frame().randomize()
 
         return this
     }
 
-    setAlwaysNeedsDisplay (b) {
-        this._alwaysNeedsDisplay = b
-        return this
-    }
-
-    alwaysNeedsDisplay () {
-        return this._alwaysNeedsDisplay
-    }
-
-    display () {
-        return this._display
-    }
-
-    setNeedsDisplay (aBool) {
-        this._needsDisplay = aBool
-        return this
-    }
-
-    setFps (v) {
-        this._fps = v
-        return this
-    }
-
     step () {
-        this._needsDisplay = true
+        this.setNeedsDisplay(true)
         /*
         if (this.needsDisplay() || this.alwaysNeedsDisplay()) {
             this.render()
         }
         */
-        this._t ++
+        this.setT(this.t()+1)
     }
 
     /*
@@ -83,30 +55,26 @@ class LedApp {
         this.endFrame()
     }
 
-    frame () {
-        return this._frame
-    }
-
     beginFrame () {
-        this._startTime = new Date().getTime()
+        this.setStartTime(new Date().getTime())
     }
 
     endFrame () {
-        if (this._needsDisplay) {
-            if (this._display.isConnected()) {
-                this._display.frame().copy(this.frame())
-                this._display.render()
+        if (this.needsDisplay()) {
+            if (this.display().isConnected()) {
+                this.display().frame().copy(this.frame())
+                this.display().render()
             }
 
-            this._htmlDisplay.frame().copy(this.frame())
-            this._htmlDisplay.setBrightness(this._display.brightness())
-            this._htmlDisplay.render()
-            this._needsDisplay = false
+            this.htmlDisplay().frame().copy(this.frame())
+            this.htmlDisplay().setBrightness(this.display().brightness())
+            this.htmlDisplay().render()
+            this.setNeedsDisplay(false)
         }
         
-        this._endTime = new Date().getTime()
-        const diffMs = this._endTime - this._startTime
-        const delayMs = 1000/this._fps
+        this.setEndTime(new Date().getTime())
+        const diffMs = this.endTime() - this.startTime()
+        const delayMs = 1000/this.fps()
         let remainingMs = delayMs - diffMs
         if (remainingMs < 0) {
             remainingMs = 0
@@ -115,27 +83,22 @@ class LedApp {
         setTimeout(() => this.frameStep(), remainingMs) 
     }
 
-    randomFramesStep () {
-        this.beginFrame()
-        this._frame.randomize()
-        this.endFrame() 
-    }
-
     onKey (event) {
         console.log("app onKey")
     }
 
     run () {
-        this._display.connect() // after connect, we'll call frameStep to start running steps
-        this._htmlDisplay.onWindowResize()
+        this.display().connect() // after connect, we'll call frameStep to start running steps
+        this.htmlDisplay().onWindowResize()
 
         // might need to wait for connect if we need to get frame dimensions first?
         this.frameStep()
-        this._htmlDisplay.layout()
+        this.htmlDisplay().layout()
+        return this
     }
 
     onLedDisplayOpen () {
-        this._display.clear()
+        this.display().clear()
     }
 
     registerForKeyboardInput () {

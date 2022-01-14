@@ -1,6 +1,6 @@
 "use strict"
 
-window.BlockChainAPI = class BlockChainAPI {
+getGlobalThis().BlockChainAPI = class BlockChainAPI {
 	constructor () {
 		this._socket = null
 		this._protocol = "wss"

@@ -1,6 +1,6 @@
 "use strict"
 
-window.Spectrum = class Spectrum {
+getGlobalThis().Spectrum = class Spectrum {
 	constructor () {
         //super();
 		this._audioContext = null

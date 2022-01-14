@@ -8,7 +8,7 @@
 
 */
 
-window.LightBrightApp = class LightBrightApp extends LedApp {
+getGlobalThis().LightBrightApp = class LightBrightApp extends LedApp {
     constructor () {
         super()
         this.setFps(30)

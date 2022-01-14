@@ -4,7 +4,7 @@
 
 */
 
-window.RandomAnimation = class RandomAnimation extends Animation {
+getGlobalThis().RandomAnimation = class RandomAnimation extends Animation {
     constructor() {
         super()
         this.setTMax(30)

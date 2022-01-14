@@ -8,7 +8,7 @@ ResourceLoader.pushRelativePaths([
 
 
 ResourceLoader.pushDoneCallback( () => {
-    window.app = new VizApp()
-    window.app.run()
+    getGlobalThis().app = new VizApp()
+    getGlobalThis().app.run()
 })
 

@@ -1,6 +1,6 @@
 "use strict"
 
-window.PongApp = class PongApp extends LedApp {
+getGlobalThis().PongApp = class PongApp extends LedApp {
     constructor () {
         super()
         this.setFps(3)

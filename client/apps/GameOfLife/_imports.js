@@ -8,7 +8,7 @@ ResourceLoader.pushRelativePaths([
 
 
 ResourceLoader.pushDoneCallback( () => {
-    window.app = new GameOfLifeApp()
-    window.app.run()
+    getGlobalThis().app = new GameOfLifeApp()
+    getGlobalThis().app.run()
 })
 

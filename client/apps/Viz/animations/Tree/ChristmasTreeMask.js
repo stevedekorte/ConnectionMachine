@@ -1,7 +1,7 @@
 "use strict"
 
 
-window.ChristmasTreeMask = class ChristmasTreeMask extends Animation {
+getGlobalThis().ChristmasTreeMask = class ChristmasTreeMask extends Animation {
     constructor() {
         super()
         this.setTMax(10)

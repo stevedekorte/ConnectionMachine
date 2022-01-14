@@ -1,6 +1,6 @@
 "use strict"
 
-window.DiagonalAnimation = class DiagonalAnimation extends LineAnimation {
+getGlobalThis().DiagonalAnimation = class DiagonalAnimation extends LineAnimation {
     constructor() {
         super()
         this.setTMax(this.frame().width() * 2 - 1)

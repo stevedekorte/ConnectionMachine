@@ -3,59 +3,56 @@
 
 
 
-window.AlphaVantageAPI = class AlphaVantageAPI {
+getGlobalThis().AlphaVantageAPI = class AlphaVantageAPI extends Base {
 	constructor () {
-		this._delegate = null
-		this._dataTable = new DataTable()
+		super()
+		this.newSlot("delegate", null)
+		this.newSlot("dataTable", new DataTable())
+		this.newSlot("symbol", "BTC")
+		this.newSlot("periodMinutes", 60) // 1min, 5min, 15min, 30min, 60min
+		this.newSlot("function", "DIGITAL_CURRENCY_MONTHLY")
+
+
 		//columnNames ['time', 'open', 'high', 'low', 'close', 'volume']
-		//this._storage = new Storage()
-		this._symbol = "BTC"
-		this._periodMinutes = 60 // 1min, 5min, 15min, 30min, 60min
-		// "DIGITAL_CURRENCY_MONTHLY" // "CRYPTO_INTRADAY" // "DIGITAL_CURRENCY_DAILY" // "DIGITAL_CURRENCY_WEEKLY"
-		this._function = "DIGITAL_CURRENCY_MONTHLY" //"CRYPTO_INTRADAY"
-		// "TIME_SERIES_INTRADAY_EXTENDED"  
+		//this.setStorage = new Storage()
+
+		/*
+		function options:
+
+			"DIGITAL_CURRENCY_MONTHLY" 
+			"CRYPTO_INTRADAY" 
+			"DIGITAL_CURRENCY_DAILY" 
+			"DIGITAL_CURRENCY_WEEKLY"
+			"CRYPTO_INTRADAY"
+			"TIME_SERIES_INTRADAY_EXTENDED"  
+			"DIGITAL_CURRENCY_MONTHLY" 
+		*/
 
 	}
 
-	symbol () {
-		return this._symbol
-	}
-
-	setDelegate (obj) {
-		this._delegate = obj
-		return this
-	}
-
-	delegate () {
-		return this._delegate
-	}
 
 	hasData () {
-		return this._dataTable.hasData()
+		return this.dataTable().hasData()
 	}
 
 	lows () {
-		return this._dataTable.valuesForColumnName("low")
+		return this.dataTable().valuesForColumnName("low")
 	}
 
 	highs () {
-		return this._dataTable.valuesForColumnName("high")
+		return this.dataTable().valuesForColumnName("high")
 	}
 
 	closes () {
-		return this._dataTable.valuesForColumnName("close")
+		return this.dataTable().valuesForColumnName("close")
 	}
 
 	opens () {
-		return this._dataTable.valuesForColumnName("open")
+		return this.dataTable().valuesForColumnName("open")
 	}
 
 	connect () {
 		this.fetchPrices()
-	}
-
-	function () {
-		return this._function
 	}
 
 	fetchPrices () {
@@ -66,7 +63,7 @@ window.AlphaVantageAPI = class AlphaVantageAPI {
 		//const url = "https://www.alphavantage.co/query?function=CRYPTO_INTRADAY&symbol=BTC5&market=USD&interval=15min&datatype=json&apikey=" + apiKey
 		let url = "https://www.alphavantage.co/query?function=" + this.function() + "&symbol=" + this.symbol() + "&market=USD&datatype=json&apikey=" + apiKey 
 		if (this.function() === "CRYPTO_INTRADAY") {
-			const interval = this._periodMinutes + "min"
+			const interval = this.periodMinutes() + "min"
 			url += "&interval=" + interval + "&outputsize=compact"
 		}
 		//const url = "https://www.alphavantage.co/query?function=CRYPTO_INTRADAY&symbol=" + this.symbol() + "&market=USD&interval=" + interval + "&datatype=json&apikey=" + apiKey + "&outputsize=compact"
@@ -87,7 +84,7 @@ window.AlphaVantageAPI = class AlphaVantageAPI {
 		xhr.setRequestHeader('User-Agent', 'request');
 		xhr.send(null);
 
-		setTimeout(() => this.fetchPrices(), this._periodMinutes * 60 * 1000)
+		setTimeout(() => this.fetchPrices(), this.periodMinutes() * 60 * 1000)
 		return this
 	}
 
@@ -97,9 +94,9 @@ window.AlphaVantageAPI = class AlphaVantageAPI {
 		if (error) {
 			this.log("ERROR: ", error)
 		} else {
-			this._dataTable.setFromJson(json)
+			this.dataTable().setFromJson(json)
 			//this.delegate().onChange(this)
-			this.delegate().onNewEntries(this._dataTable.rows())
+			this.delegate().onNewEntries(this.dataTable().rows())
 		}
 	}
 
