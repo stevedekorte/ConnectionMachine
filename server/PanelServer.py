@@ -15,13 +15,8 @@ class PanelServer(object):
 		self.host = "192.168.4.185"
 		self.port = 13254
 		self.server = None
-		self.panel = None
-		self.setupPanel()
-		self.clientTally = 0
-
-	def setupPanel(self):
 		self.panel = Panel()
-		pass
+		self.clientTally = 0
 
 	def run(self):
 		print("running on host " + self.host + " and port " + str(self.port))
@@ -52,7 +47,7 @@ class PanelServer(object):
 		self.clientTally += 1
 		client["id"] = str(self.clientTally)
 		print("client " + client["id"] + " connected")
-		self.sendClientMessage(client, "{ frame: { width: " + self.panel.width + ", height: " + self.panel.height + "} }")
+		self.sendClientMessage(client, "{ frame: { width: " + self.panel.width() + ", height: " + self.panel.height() + "} }")
 
 	def onClientDisconnect(self, client, server):
 		print("client " + client["id"] + " disconnected")

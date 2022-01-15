@@ -18,6 +18,12 @@ class Panel(object):
         #self.parseArgs()
         self.h = ht1632c.HT1632C(self.NUM_PANELS, self.PANEL_ROTATION)
 
+    def width (self):
+        return this.WIDTH
+    
+    def height (self): 
+        return this.HEIGHT
+        
     def setHexFrame(self, frame_data):
         self.h.hexframe(frame_data)
         self.h.sendframe()
