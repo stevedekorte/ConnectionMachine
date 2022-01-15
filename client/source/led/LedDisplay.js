@@ -58,6 +58,12 @@ class LedDisplay extends Base {
 	onMessage (event) {
 		const message = event.data
 		this.log("onMessage('" + message + "')")
+		const json = JSON.parse(message)
+		const f = json.frame
+		if (f) {
+			this.setWidth(f.width)
+			this.setHeight(f.height)
+		}
 	}
 
 	onError (event) {

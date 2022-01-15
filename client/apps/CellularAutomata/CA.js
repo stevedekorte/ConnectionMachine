@@ -16,36 +16,56 @@ getGlobalThis().CA = class CA extends Base {
         // 00011110
 
 
-        this._width = 32
+        this.newSlot("width", 32)
 
         // rules  
         // first 3 bits is are state of previous left, middle, and right bits
         // last bit is for new state
 
-        this._rules = [
-            [0, 0, 0, 1],
-            [0, 0, 1, 1],
-            [0, 1, 0, 1],
-            [0, 1, 1, 0],
-            [1, 0, 0, 0],
-            [1, 0, 1, 0],
-            [1, 1, 0, 1],
-            [1, 1, 1, 0]
-        ]
+        this.newSlot("rules", [
+            [0, 0, 0, 1], // 0
+            [0, 0, 1, 1], // 1 // mirrors 4
+            [0, 1, 0, 1], // 2 
+            [0, 1, 1, 0], // 3 // mirrors 6
+            [1, 0, 0, 0], // 4  // mirrors 1
+            [1, 0, 1, 0], // 5  
+            [1, 1, 0, 1], // 6  // mirrors 3
+            [1, 1, 1, 0]  // 7
+        ])
 
-        this._generation = 0
+        this.newSlot("doesEnforceSymmetry", true)
+
+        /*
+        this.newSlot("symmetries", [
+            [1, 4], [3, 6]
+        ])
+        */
+
+        this.newSlot("generation", 0)
 
         this.randomizeRules()
-        this._cells = new Array(this._width)
+        this.newSlot("cells", new Array(this.width()))
         this.restart()
     }
 
-    generation() {
-        return this._generation
-    }
+    enforceRuleSymmetries () {
+        const rules = this.rules()
 
-    cells () {
-        return this._cells
+        console.log("ruleString 1: ", this.ruleString())
+
+        rules[4][3] = rules[1][3]
+        rules[6][3] = rules[3][3]
+
+        console.log("ruleString 2: ", this.ruleString())
+
+        /*
+        this.symmetries().forEach((sym) => {
+            const i1 = sym[0]
+            const v = this.cells()[i1]
+            for (let ri = 1; ri < this.
+                rules[
+        })
+        */
     }
 
     ruleString() {
@@ -54,6 +74,14 @@ getGlobalThis().CA = class CA extends Base {
             s += this._rules[i][3]
         }
         return s
+    }
+
+    enforceCellStateSymmetry () {
+        const cells = this.cells()
+        for (let i = 0; i < cells.length - 1; i++) {
+            cells[i] = cells[cells.length - 1 - i]
+        }
+        return this
     }
 
     randomizeRules() {
@@ -72,6 +100,11 @@ getGlobalThis().CA = class CA extends Base {
         } else {
             rule[3] = 1
         }
+        
+        if (this.doesEnforceSymmetry()) {
+            this.enforceRuleSymmetries()
+        }
+
         this.genRuleDict()
     }
 

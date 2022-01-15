@@ -52,6 +52,7 @@ class PanelServer(object):
 		self.clientTally += 1
 		client["id"] = str(self.clientTally)
 		print("client " + client["id"] + " connected")
+		self.sendClientMessage(client, "{ frame: { width: " + self.panel.width + ", height: " + self.panel.height + "} }")
 
 	def onClientDisconnect(self, client, server):
 		print("client " + client["id"] + " disconnected")

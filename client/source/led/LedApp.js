@@ -64,6 +64,8 @@ class LedApp extends Base {
             if (this.display().isConnected()) {
                 this.display().frame().copy(this.frame())
                 this.display().render()
+            } else {
+                console.log("display not connected")
             }
 
             this.htmlDisplay().frame().copy(this.frame())
@@ -92,6 +94,7 @@ class LedApp extends Base {
         this.htmlDisplay().onWindowResize()
 
         // might need to wait for connect if we need to get frame dimensions first?
+        
         this.frameStep()
         this.htmlDisplay().layout()
         return this

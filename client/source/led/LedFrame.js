@@ -1,5 +1,7 @@
 "use strict"
 
+// TODO: have protocol to get LedPanel dimensions
+
 Object.defineSlot = function(obj, slotName, slotValue) {
     //if (!Object.hasOwnSlot(obj, slotName, slotValue)) {
     const descriptor = {
