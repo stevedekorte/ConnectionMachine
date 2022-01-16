@@ -9,7 +9,7 @@ String.prototype.replaceAtIndex = function(i, newValue) {
 getGlobalThis().BrailleApp = class BrailleApp extends LedApp {
     constructor () {
         super()
-        this.setFps(10)
+        this.setFps(120)
         this.newSlot("text", "") 
         this.registerForKeyboardInput()
         //this.setAlwaysNeedsDisplay(false)

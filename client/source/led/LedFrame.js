@@ -2,6 +2,7 @@
 
 // TODO: have protocol to get LedPanel dimensions
 
+/*
 Object.defineSlot = function(obj, slotName, slotValue) {
     //if (!Object.hasOwnSlot(obj, slotName, slotValue)) {
     const descriptor = {
@@ -23,8 +24,7 @@ if (!String.prototype.capitalized) {
         }
     )
 }
-
-
+*/
 
 const byteToHex = [];
 
@@ -99,6 +99,8 @@ String.prototype.hashCode = function() {
     }
     return hash;
 }
+
+// ----------------
 
 
 class LedFrame extends Base {
@@ -229,6 +231,9 @@ class LedFrame extends Base {
         if (y < 0) {
             y = this._ymax + 1 + y
         }
+
+        x = x % (this._xmax - 1)
+        y = y % (this._ymax - 1)
 
         const index = (Math.floor(x) * this._xmax) + Math.floor(y)
         return index

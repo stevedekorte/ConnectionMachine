@@ -61,17 +61,7 @@ class LedApp extends Base {
 
     endFrame () {
         if (this.needsDisplay()) {
-            if (this.display().isConnected()) {
-                this.display().frame().copy(this.frame())
-                this.display().render()
-            } else {
-                console.log("display not connected")
-            }
-
-            this.htmlDisplay().frame().copy(this.frame())
-            this.htmlDisplay().setBrightness(this.display().brightness())
-            this.htmlDisplay().render()
-            this.setNeedsDisplay(false)
+            this.pushToDisplays()
         }
         
         this.setEndTime(new Date().getTime())
@@ -85,16 +75,28 @@ class LedApp extends Base {
         setTimeout(() => this.frameStep(), remainingMs) 
     }
 
+    pushToDisplays () {
+        if (this.display().isConnected()) {
+            this.display().frame().copy(this.frame())
+            this.display().render()
+        } else {
+            //console.log("display not connected")
+        }
+
+        this.htmlDisplay().frame().copy(this.frame())
+        this.htmlDisplay().setBrightness(this.display().brightness())
+        this.htmlDisplay().render()
+        this.setNeedsDisplay(false)
+    }
+
     onKey (event) {
         console.log("app onKey")
     }
 
     run () {
-        this.display().connect() // after connect, we'll call frameStep to start running steps
+        this.display().connect()
         this.htmlDisplay().onWindowResize()
-
         // might need to wait for connect if we need to get frame dimensions first?
-        
         this.frameStep()
         this.htmlDisplay().layout()
         return this
@@ -102,6 +104,11 @@ class LedApp extends Base {
 
     onLedDisplayOpen () {
         this.display().clear()
+        this.pushToDisplays()
+    }
+
+    onResizeLedDisplay () {
+        // TODO: need to have new frames be same size as display 
     }
 
     registerForKeyboardInput () {

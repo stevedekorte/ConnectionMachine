@@ -15,6 +15,10 @@ class LedDisplay extends Base {
 		this.newSlot("brightness", 1)
 		this.newSlot("autoBrightness", true)
 		this.newSlot("isSecure", false)
+
+		this.newSlot("width", 32) // taken from server after connection
+		this.newSlot("height", 32) // taken from server after connection
+
 	}
 
 	run () {
@@ -63,6 +67,13 @@ class LedDisplay extends Base {
 		if (f) {
 			this.setWidth(f.width)
 			this.setHeight(f.height)
+			this.onResize()
+		}
+	}
+
+	onResize () {
+		if (this.delegate().onResizeLedDisplay) {
+			this.delegate().onResizeLedDisplay()
 		}
 	}
 
@@ -85,7 +96,7 @@ class LedDisplay extends Base {
 			}
 			return 0
 		} 
-		return this.brightness90
+		return this.brightness()
 	}
 
 	render () {

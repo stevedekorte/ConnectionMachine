@@ -27,7 +27,7 @@ class EqualizerApp extends LedApp {
         const bins = this._spectrum.getBins()
         //console.log("bins = ", bins)
         if (bins) {
-            
+            /*
             for (let x = 0; x < xmax; x++) {
                 let b = bins[x+4]/255
                 const r = 0.0
@@ -38,6 +38,7 @@ class EqualizerApp extends LedApp {
                 this.frame().setBit(x, ymax-1- v, 1)
 
             }
+            */
             
 
             /*
@@ -53,7 +54,7 @@ class EqualizerApp extends LedApp {
             }
             */
             
-            /*
+            
             for (let x = 0; x < xmax/2; x++) {
                 let scale = 1
                 let b = bins[Math.floor((xmax/2-x)*scale)]/255
@@ -75,7 +76,7 @@ class EqualizerApp extends LedApp {
                     //this.frame().setBit(xmax-1 -x, ymax/2 - v, 1)
                 }
             }
-            */
+            
 
         }
     }

@@ -4,7 +4,7 @@ getGlobalThis().CellularAutomataApp = class CellularAutomata extends LedApp {
     constructor () {
         super()
         this.newSlot("ca", new CA())
-        this.setFps(1/15)
+        this.setFps(1/10)
     }
 
     step () {
@@ -78,7 +78,6 @@ getGlobalThis().CellularAutomataApp = class CellularAutomata extends LedApp {
 
         let s = ""
         for (let y = y1; y < ymax - 1; y++) {
-
             // copy cells to frame
             for (let x = 0; x < xmax; x++) { 
                 const v = ca.cells()[x] ? 1 : 0

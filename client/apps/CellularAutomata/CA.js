@@ -1,7 +1,5 @@
 "use strict"
 
-console.log("CA")
-
 getGlobalThis().CA = class CA extends Base {
     constructor() {
         super()
@@ -51,12 +49,8 @@ getGlobalThis().CA = class CA extends Base {
     enforceRuleSymmetries () {
         const rules = this.rules()
 
-        console.log("ruleString 1: ", this.ruleString())
-
         rules[4][3] = rules[1][3]
         rules[6][3] = rules[3][3]
-
-        console.log("ruleString 2: ", this.ruleString())
 
         /*
         this.symmetries().forEach((sym) => {
