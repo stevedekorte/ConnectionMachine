@@ -108,9 +108,33 @@ class LedFrame extends Base {
         super()
         this.newSlot("xmax", 32)
         this.newSlot("ymax", 32)
-       // this.newSlot("bits", Array(this.ledCount()).fill(0))
-        this.newSlot("bits", new Uint8Array(this.ledCount()).fill(0))
+        this.newSlot("bits", null)
+        this.setupBits()
+    }
+    
+    setupBits () {
+        this.setBits(new Uint8Array(this.ledCount()).fill(0))
+        return this
+    }
 
+    setWidth (v) {
+        this.setXmax(v)
+        this.setupBits()
+        return this
+    }
+
+    setHeight (v) {
+        this.setYmax(v)
+        this.setupBits()
+        return this
+    }
+
+    width () {
+        return this.xmax()
+    }
+
+    height () {
+        return this.ymax()
     }
 
     duplicate () {
@@ -147,14 +171,6 @@ class LedFrame extends Base {
         let count = 0
         this.bits().forEach((b) => { if (b === 1) { count ++ }})
         return count
-    }
-
-    width () {
-        return this.xmax()
-    }
-
-    height () {
-        return this.ymax()
     }
 
     clear () {

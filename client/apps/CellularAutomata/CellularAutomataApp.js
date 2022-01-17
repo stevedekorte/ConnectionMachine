@@ -9,11 +9,6 @@ getGlobalThis().CellularAutomataApp = class CellularAutomata extends LedApp {
 
     step () {
         super.step()
-/*
-        if (this.t() % 15 != 1) {
-            return
-        }
-*/
         this.frame().clear()
         
         this.setupCaForRun()
@@ -23,7 +18,7 @@ getGlobalThis().CellularAutomataApp = class CellularAutomata extends LedApp {
 
     setupCaForRun () {
         const ca = this.ca()
-        ca.mutateRules()
+        //ca.mutateRules()
         ca.randomizeCells()
         ca.enforceCellStateSymmetry()
     }

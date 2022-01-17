@@ -2,6 +2,7 @@
 
 ResourceLoader.pushRelativePaths([
     "../../_imports.js",
+    "CellularAutomata2d.js",
     "GameOfLifeApp.js",
 ]);
 
