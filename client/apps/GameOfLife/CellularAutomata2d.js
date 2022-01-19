@@ -28,12 +28,14 @@ getGlobalThis().CellularAutomata2d = class CellularAutomata2d extends Base {
     setWidth (v) {
         this.frame().setWidth(v)
         this.nextFrame().setWidth(v)
+        this.reset()
         return this
     }
 
     setHeight (v) {
         this.frame().setHeight(v)
         this.nextFrame().setHeight(v)
+        this.reset()
         return this
     }
 
@@ -144,21 +146,34 @@ getGlobalThis().CellularAutomata2d = class CellularAutomata2d extends Base {
         const frame = this.frame()
 
         //this.renderRules()
-        nextFrame.copy(frame)
-        
+        //nextFrame.copy(frame)
+        nextFrame.clear()
+        //frame.testCircular()
 
-        for (let x = 0; x < xmax; x++) {
-            for (let y = 0; y < ymax; y++) {
-                const total = (
-                    frame.circularGetBit(x+0, y-1) + // top  
-                    frame.circularGetBit(x+0, y+1) + // bottom
-                    frame.circularGetBit(x-1, y+0) + // left
-                    frame.circularGetBit(x+1, y+0) + // right
-                    frame.circularGetBit(x-1, y-1) + // top left
-                    frame.circularGetBit(x-1, y+1) + // bottom left
-                    frame.circularGetBit(x+1, y-1) + // bottom right
-                    frame.circularGetBit(x+1, y+1)   // top right
-                )
+        //frame.assertValid()
+        //nextFrame.assertValid()
+        
+        for (let y = 0; y < ymax; y++) {
+            for (let x = 0; x < xmax; x++) {
+                const top = frame.circularGetBit(x+0, y-1)
+                const bottom = frame.circularGetBit(x+0, y+1) 
+                const left = frame.circularGetBit(x-1, y+0) 
+
+                if ( typeof (left) == 'undefined') {
+                    //throw new Error("non leftbit found")
+                    frame.circularGetBit(x-1, y+0) 
+                }
+                const right = frame.circularGetBit(x+1, y+0) 
+                const topLeft = frame.circularGetBit(x-1, y-1) 
+                const bottomLeft = frame.circularGetBit(x-1, y+1) 
+                const bottomRight = frame.circularGetBit(x+1, y-1) 
+                const topRight = frame.circularGetBit(x+1, y+1) 
+                
+                const total = top + bottom + left + right + topLeft + bottomLeft + bottomRight + topRight
+
+                if (Number.isNaN(total)) {
+                    throw new Error("non bit found")
+                }
 
                 // Conway's rules
                 if (frame.getBit(x, y) == 1) {
@@ -171,6 +186,9 @@ getGlobalThis().CellularAutomata2d = class CellularAutomata2d extends Base {
             }
         }
         frame.copy(nextFrame)
+
+        //frame.assertValid()
+        //nextFrame.assertValid()
 
         if (this.checkForLoop()) {
             this.reset()

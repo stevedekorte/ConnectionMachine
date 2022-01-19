@@ -25,6 +25,11 @@ class LedApp extends Base {
 
         //this.frame().setAllBitsTo(1)
         //this.frame().randomize()
+        this.newSlot("isListeningToKeyboard", false)
+        this.registerForKeyboardInput()
+
+        this.newSlot("isPaused", false)
+        this.newSlot("frameStepTimeoutId", null)
 
         return this
     }
@@ -65,14 +70,32 @@ class LedApp extends Base {
         }
         
         this.setEndTime(new Date().getTime())
-        const diffMs = this.endTime() - this.startTime()
+
         const delayMs = 1000/this.fps()
-        let remainingMs = delayMs - diffMs
-        if (remainingMs < 0) {
-            remainingMs = 0
-            console.log("WARNING: render can't keep up with fps rate")
+        let remainingMs = delayMs
+        if (this.startTime()) {
+            const diffMs = this.endTime() - this.startTime()
+            remainingMs = delayMs - diffMs
+            if (remainingMs < 0) {
+                remainingMs = 0
+                console.log("WARNING: render can't keep up with fps rate")
+            }
         }
-        setTimeout(() => this.frameStep(), remainingMs) 
+        
+        const tid = setTimeout(() => this.frameStep(), remainingMs) 
+        this.setFrameStepTimeoutId(tid)
+    }
+
+    cancelFrameStepTimeout () {
+        if (this.frameStepTimeoutId()) {
+            clearTimeout(this.frameStepTimeoutId())
+            this.setFrameStepTimeoutId(null)
+        }
+    }
+
+    resetFrameStep () {
+        this.cancelFrameStepTimeout()
+        this.frameStep()
     }
 
     pushToDisplays () {
@@ -112,15 +135,43 @@ class LedApp extends Base {
     }
 
     registerForKeyboardInput () {
-        window.addEventListener('keydown', (event) => { this.onKeyDown(event) }, true);
-        window.addEventListener('keyup', (event) => { this.onKeyUp(event) }, true);
+        if (!this.isListeningToKeyboard()) {
+            window.addEventListener('keydown', (event) => { this.onKeyDown(event) }, true);
+            window.addEventListener('keyup', (event) => { this.onKeyUp(event) }, true);
+            this.setIsListeningToKeyboard(true)
+        }
     }
 
     onKeyDown (event) {
     }
 
     onKeyUp (event) {
+        const k = event.which
 
+        switch (event.key) {
+            case "ArrowLeft":
+                break;
+            case "ArrowRight":
+                // Right pressed
+                break;
+            case "ArrowUp":
+                this.setFps(Math.min(200, this.fps() * 1.25))
+                this.resetFrameStep()
+                break;
+            case "ArrowDown":
+                this.setFps(Math.max(1/15, this.fps() * 0.75))
+                this.resetFrameStep()
+                break;
+        }
+
+        if (event.which === 32) { // space key
+            this.setIsPaused(!this.isPaused())
+            if (this.isPaused()) {
+                this.cancelFrameStepTimeout()
+            } else {
+                this.resetFrameStep()
+            }
+        }
     }
 
     onClickLight (event, x, y) {

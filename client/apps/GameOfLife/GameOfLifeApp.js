@@ -3,11 +3,14 @@
 getGlobalThis().GameOfLifeApp = class GameOfLifeApp extends LedApp {
     constructor () {
         super()
-        this.setFps(1/5)
+        this.setFps(1)
         this.newSlot("ca", new CellularAutomata2d())
         this.ca().setupGameOfLifeRules()
+        this.ca().setWidth(Math.floor(this.frame().width()))
+        this.ca().setHeight(Math.floor(this.frame().height()/4))
     }
 
+    /*
     renderRules () {
         const xmax = this.frame().width()
         const ymax = this.frame().height()
@@ -38,11 +41,15 @@ getGlobalThis().GameOfLifeApp = class GameOfLifeApp extends LedApp {
         })
         frame.setBit(x, 0, 1); x++
     }
+    */
 
     step () {
+        const ca = this.ca()
         super.step()
-        this.ca().step()
+        ca.step()
         //this.renderRules()
-        this.frame().copy(this.ca().frame())
+        const x1 = Math.floor((this.frame().width() - ca.frame().width())/2)
+        const y1 = Math.floor((this.frame().height() - ca.frame().height())/2)
+        this.frame().atCompositeFrame(x1, y1, ca.frame())
     }
 }

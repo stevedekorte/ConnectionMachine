@@ -197,8 +197,19 @@ class LedFrame extends Base {
     randomize () {
         const count = this.ledCount()
         for (let i = 0; i < count; i++) {
-            const v = Math.round(Math.random())
-            this.setBitAtIndex(i, v)
+            const v = Math.round(Math.random()) ? 0 : 1
+            //this.setBitAtIndex(i, v)
+            this.setBitAtIndex(count - 1 - i, v)
+        }
+    }
+
+    assertValid () {
+        const count = this.ledCount()
+        for (let i = 0; i < count; i++) {
+            const v = this.bits()[i]
+            if ((v !== 0 && v !== 1) || Number.isNaN(v)) {
+                throw new Error("invalid value of (" + v + ")s for bit index " + i)
+            }
         }
     }
 
@@ -240,28 +251,43 @@ class LedFrame extends Base {
 
     // --- xy utility methods ---
 
-    circular_index_for_xy (x, y) {
+    circularX (x) {
+        x = x % (this._xmax)
         if (x < 0) {
-            x = this._xmax + 1 + x
+            x = this._xmax + x
         }
+        return x
+    }
+
+    circularY (y) {
+        y = y % (this._ymax)
         if (y < 0) {
-            y = this._ymax + 1 + y
+            y = this._ymax + y
         }
-
-        x = x % (this._xmax - 1)
-        y = y % (this._ymax - 1)
-
-        const index = (Math.floor(x) * this._xmax) + Math.floor(y)
-        return index
+        return y
     }
 
     circularGetBit (x, y) {
-        const i = this.circular_index_for_xy(x, y)
-        return this._bits[i]
+        x = this.circularX(x)
+        y = this.circularY(y)
+        const i = this.index_for_xy(x, y)
+        const v = this._bits[i]
+        if (Number.isNaN(v)) {
+            throw new Error("nan value detected")
+        }
+        return v
     }
 
+    testCircular () {
+        if (this.circularX(-1-32) !== 31) {
+            throw new Error("!")
+        }
+        if (this.circularX(32+32) !== 0) {
+            throw new Error("!")
+        }
+    }
 
-    index_for_xy (x, y) {
+    assertValidCoords (x, y) {
         if (x > this._xmax - 1 || x < 0) {
             throw new Error("x coordinate " + x + " is out of bounds 0 to " + this._xmax)
         }
@@ -269,9 +295,11 @@ class LedFrame extends Base {
         if (y > this._ymax - 1 || y < 0) {
             throw new Error("y coordinate " + y + " is out of bounds 0 to " + this._ymax)
         }
+    }
 
-        const index = (Math.floor(x) * this._xmax) + Math.floor(y)
-
+    index_for_xy (x, y) {
+        //this.assertValidCoords(x, y)
+        const index = (Math.floor(x) * this._ymax) + Math.floor(y) 
         return index
     }
 
@@ -322,8 +350,55 @@ class LedFrame extends Base {
         this._bits[i] = v || cv ? 1 : 0
     }
 
+    hasSameDimensionsAs (frame) {
+        return (this.width() === frame.width()) && (this.height() === frame.height())
+    }
+
+    assertHasSameDimensionsAs (frame) {
+        if (this.width() != frame.width()) {
+            throw new Error("frame widths must match")
+        }
+
+        if (this.height() != frame.height()) {
+            throw new Error("frame heights must match")
+        }
+        return this
+    }
+
     copy (frame) {
-        this._bits = frame._bits.slice()
+        this.assertHasSameDimensionsAs(frame)
+        //this.setBits(frame.bits().slice())
+        const count = this.ledCount()
+        const otherBits = frame.bits()
+        for (let i = 0; i < count; i++) {
+            this._bits[i] = otherBits[i]
+        }
+        return this
+    }
+
+    atCompositeFrame (x1, y1, frame) {
+        if (x1 === 0 && y1 === 0 && this.hasSameDimensionsAs(frame)) {
+            this.copy(frame)
+            return this
+        }
+
+        const xmax = this.width()
+        const ymax = this.height()
+
+        // TODO: this could be faster
+        for (let y = 0; y < frame.height(); y++) {
+            for (let x = 0; x < frame.width(); x++ ) {
+                const yy = y1 + y
+                const xx = x1 + x
+                if (xx >=0 && xx < xmax) {
+                    if (yy >=0 && yy < ymax) {
+                        const v = frame.getBit(x, y)
+                        this.setBit(xx, yy, v)
+                    }
+                }
+            }
+        }
+        return this
     }
 
     // compositing 
@@ -435,6 +510,18 @@ class LedFrame extends Base {
 
     // advanced drawing
 
+    asString () {
+        const xmax = this.width()
+        const ymax = this.height()
+        let s = ""
+        for (let y = 0; y < ymax; y++) {
+            for (let x = 0; x < xmax; x++) {
+                s += this.getBit(x, y)
+            }
+            s += "\n"
+        }
+        return s
+    }
 
     drawBitsForNumberAt (x, y, aNumber) {
         const bitsString = aNumber.toString(2).split('').reverse().join('');
@@ -457,11 +544,17 @@ class LedFrame extends Base {
     }
 
 
+    copySize (frame) {
+        this.setWidth(frame.width())
+        this.setHeight(frame.height())
+        return this
+    }
+
     mirrorLeftToRight () {
         const xmax = this.width()
         const ymax = this.height()
 
-        const newFrame = new LedFrame()
+        const newFrame = new LedFrame().copySize(this)
         for (let y = 0; y < ymax; y++) {
             for (let x = 0; x < xmax/2 + 1; x++) {
                 let xx = xmax - 1- x
@@ -470,7 +563,7 @@ class LedFrame extends Base {
                 newFrame.setBit(xx, y, v)
             }
         }
-        this._bits = newFrame._bits
+        this.copy(newFrame)
         return this
     }
 
@@ -479,7 +572,7 @@ class LedFrame extends Base {
         const xmax = this.width()
         const ymax = this.height()
 
-        const newFrame = new LedFrame()
+        const newFrame = new LedFrame().copySize(this)
         for (let y = 0; y < ymax/2 +1; y++) {
             for (let x = 0; x < xmax; x++) {
                 let yy = ymax - 1- y
@@ -488,7 +581,7 @@ class LedFrame extends Base {
                 newFrame.setBit(x, yy, v)
             }
         }
-        this._bits = newFrame._bits
+        this.copy(newFrame)
         return this
     }
 
