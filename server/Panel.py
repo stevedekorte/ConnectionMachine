@@ -11,7 +11,7 @@ import time
 class Panel(object): 
     def __init__(self):
         self.NUM_PANELS = 1
-        # defult to flip vertical and rotate so origin is at top left. 
+        # default to flip vertical and rotate so origin is at top left. 
         self.PANEL_ROTATION = 3
         self.WIDTH = self.NUM_PANELS * 32
         self.HEIGHT = 32
