@@ -3,57 +3,38 @@
 class HtmlDisplay extends Base {
 	constructor () {
 		super()
+		this.newSlot("element", null)
+		this.setupElement()
+
+		this.newSlot("frame", new LedFrame())
+		this.newSlot("delegate", null)
+		this.newSlot("rows", [])
+		this.newSlot("brightness", 1)
+		this.registerForResize()
+		this.newSlot("displayWidth", 500)
+		this.newSlot("displayHeight", 500)
+		this.newSlot("displayPadding", 100)
+
+		this.layoutFullDocument()
+	}
+
+	setupElement () {
 		const e = document.createElement("div")
-		this._element = e
 		e.style.padding = "60px"
 		e.className = "HtmlDisplay"
 		e.style.overflow = "hidden"
+		this.setElement(e)
+	}
 
+	layoutFullDocument () {
 		const b = document.body
-		b.appendChild(this._element)
+		b.appendChild(this.element())
 		b.style.backgroundColor = "#000"
-
 		b.style.display = "flex"
 		b.style.justifyContent = "center"
 		b.style.alignItems = "center"
 		b.style.height = "100%"
 		document.documentElement.style.height = "100%"
-
-		this._frame = new LedFrame()
-		this._delegate = null
-		this._rows = []
-		this._brightness = 1
-		this.registerForResize()
-		this.setDisplayWidth(600)
-		this.setDisplayHeight(600)
-		this.setDisplayPadding(100)
-	}
-
-	setDisplayPadding (v) {
-		this._displayPadding = Math.floor(v)
-		return this
-	}
-
-	displayPadding () {
-		return this._displayPadding
-	}
-
-	setDisplayWidth (v) {
-		this._displayWidth = Math.floor(v)
-		return this
-	}
-
-	displayWidth () {
-		return this._displayWidth
-	}
-
-	setDisplayHeight (v) {
-		this._displayHeight = Math.floor(v)
-		return this
-	}
-
-	displayHeight () {
-		return this._displayHeight
 	}
 
 	innerWidth () {
@@ -72,19 +53,6 @@ class HtmlDisplay extends Base {
 	boxHeight () {
 		const ymax = this.frame().height()
 		return Math.floor(this.innerHeight()/ymax)
-	}
-
-	setDelegate (obj) {
-		this._delegate = obj
-		return this
-	}
-
-	boxWidth () {
-		this
-	}
-
-	frame () {
-		return this._frame
 	}
 
 	setup () {
@@ -228,16 +196,12 @@ class HtmlDisplay extends Base {
 		this.render()
 	}
 
-	setBrightness (v) { // max is 15
+	setBrightness (v) { // int between (and including) 0 and 15
+		v = Math.max(0, v)
+		v = Math.min(15, v)
 		v = Math.round(v)
-		if (v > 15) { v = 15 }
-		if (v < 0) { v = 0 }
 		this._brightness = v
 		return this
-	}
-
-	brightness () {
-		return this._brightness
 	}
 
 	log (msg) {
@@ -271,18 +235,14 @@ class HtmlDisplay extends Base {
 		const scale = Math.min(f1, f2) * 0.9
 
 		this._element.style.transform = "scale(" + scale + ")"
-
 	}
 	
 	layout () {
 		this.fitToWindow()
-
-		//this._element.style.transform = "translate(50%, 50%) scale(2)"
 	}
 
 	onClickItem (element) {
 		console.log("click ", element._dict.x, " ", element._dict.y)
-		//element.toggleBit()
 		if (this._delegate && this._delegate.onClickLight) {
 			this._delegate.onClickLight(event, element._dict.x, element._dict.y)
 		}

@@ -1,3 +1,37 @@
+Object.defineSlot = function(obj, slotName, slotValue) {
+    //if (!Object.hasOwnSlot(obj, slotName, slotValue)) {
+    const descriptor = {
+        configurable: true,
+        enumerable: false,
+        value: slotValue,
+        writable: true,
+    }
+    Object.defineProperty(obj, slotName, descriptor)
+    //}
+}
+
+Object.defineSlots = function(obj, dict) {
+    Object.keys(dict).forEach((slotName) => {
+        const slotValue = dict[slotName]
+        Object.defineSlot(obj, slotName, slotValue)
+    })
+}
+
+// ------------------------------------------------------------------
+
+
+// ------------------------------------------------------------------
+
+getGlobalThis().Iterator_asArray = function (it) {
+    const array = []
+    let result = it.next()
+    while (!result.done) {
+        array.push(result.value)
+        result = it.next()
+    }
+    return array
+}
+
 
 // ------------------------------------------------------------------
 
@@ -8,6 +42,8 @@ if (!String.prototype.capitalized) {
         });
     }
 }
+
+
 
 // ------------------------------------------------------------------
 
@@ -64,25 +100,4 @@ getGlobalThis().Base = class Base {
 
         return this;
     }
-}
-// ------------------------------------------------------------------
-
-if (!String.prototype.capitalized) {
-    String.prototype.capitalized = function () {
-        return this.replace(/\b[a-z]/g, function (match) {
-            return match.toUpperCase();
-        });
-    }
-}
-
-// ---
-
-getGlobalThis().Iterator_asArray = function (it) {
-    const array = []
-    let result = it.next()
-    while (!result.done) {
-        array.push(result.value)
-        result = it.next()
-    }
-    return array
 }

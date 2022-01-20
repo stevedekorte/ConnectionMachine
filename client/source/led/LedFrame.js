@@ -1,108 +1,5 @@
 "use strict"
 
-// TODO: have protocol to get LedPanel dimensions
-
-/*
-Object.defineSlot = function(obj, slotName, slotValue) {
-    //if (!Object.hasOwnSlot(obj, slotName, slotValue)) {
-    const descriptor = {
-        configurable: true,
-        enumerable: false,
-        value: slotValue,
-        writable: true,
-    }
-    Object.defineProperty(obj, slotName, descriptor)
-    //}
-}
-
-if (!String.prototype.capitalized) {
-    Object.defineSlot(String.prototype, "capitalized", 
-        function () {
-            return this.replace(/\b[a-z]/g, function (match) {
-                return match.toUpperCase();
-            });
-        }
-    )
-}
-*/
-
-const byteToHex = [];
-
-for (let n = 0; n <= 0xff; ++n) {
-    const hexOctet = n.toString(16).padStart(2, "0");
-    byteToHex.push(hexOctet);
-}
-
-function hex(buff) {
-    //const buff = new Uint8Array(arrayBuffer);
-    const hexOctets = []; // new Array(buff.length) is even faster (preallocates necessary array size), then use hexOctets[i] instead of .push()
-
-    /*
-    for (let i = 0; i < buff.length; ++i) {
-        hexOctets.push(byteToHex[buff[i]]);
-    }
-
-    return hexOctets.join("");
-    */
-    let out = ""
-    for (let i = 0; i < buff.length; ++i) {
-        out += byteToHex[buff[i]];
-    }
-
-    return out;
-}
-
-
-Uint8Array.prototype.binaryToUint8 = function () {
-    // convert a byte array where each byte only holds one bit, into a uint8 array
-    const outBitsPerByte = 8 // since we're converting to hex?
-    const out = new Uint8Array(Math.ceil(this.length/outBitsPerByte))
-    let outByteIndex = 0
-    let outBitIndex = 0
-    let currentByte = 0
-    for (let i = 0; i < this.length; i++) {
-        let b = this[i]
-        if (b) {
-            const v = 1 << 7 - outBitIndex
-            currentByte = currentByte | v
-        }
-
-        outBitIndex ++
-        if (outBitIndex == outBitsPerByte) {
-            out[outByteIndex] = currentByte
-            currentByte = 0
-            outBitIndex = 0
-            outByteIndex ++
-        }
-    }
-    return out
-}
-
-
-
-// ----------------
-
-Array.prototype.remove = function(v) {
-  const i = this.indexOf(v);
-  if (i > -1) {
-    this.splice(i, 1);
-  }
-  return this;
-}
-
-String.prototype.hashCode = function() {
-    var hash = 0;
-    for (var i = 0; i < this.length; i++) {
-        var char = this.charCodeAt(i);
-        hash = ((hash<<5)-hash)+char;
-        hash = hash & hash; // Convert to 32bit integer
-    }
-    return hash;
-}
-
-// ----------------
-
-
 class LedFrame extends Base {
     constructor () {
         super()
@@ -145,7 +42,7 @@ class LedFrame extends Base {
 
     hash () {
         /*
-        can't use this digest because they are async and return promises
+        can't use this digest because it's async and return promises
         return  crypto.subtle.digest('SHA-1', this.bits())
         */
         return this.bits().join("").hashCode()
@@ -227,26 +124,8 @@ class LedFrame extends Base {
 
     asHexFrame () {
         const uint8 = this.bits().binaryToUint8()
-        const out2 = hex(uint8)
-        return out2
-        /*
-        // TODO: this could be much faster
-        const bits = this.bits()
-        const hexChunks = []
-        const bitChunks = []
-        for (let n = 0; n < bits.length / 4; n++) {
-            const index = n * 4
-            const chunk = bits.slice(index, index + 4)
-            const s = chunk.join("")
-            const hexChunk = parseInt(s, 2).toString(16);
-            hexChunks.push(hexChunk)
-        }
-        const out = hexChunks.join("")
-        console.log("out1: ", out)
-        console.log("out2: ", out2)
-        //throw "stop"
-        return out2
-        */
+        const out = uint8.asHex()
+        return out
     }
 
     // --- xy utility methods ---

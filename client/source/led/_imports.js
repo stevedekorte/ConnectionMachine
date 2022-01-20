@@ -1,6 +1,7 @@
 "use strict"
 
 ResourceLoader.pushRelativePaths([
+    "Helpers.js",
     "HtmlDisplay.js",
     "LedApp.js",
     "LedDisplay.js",

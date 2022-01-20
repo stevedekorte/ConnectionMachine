@@ -130,8 +130,6 @@ class LedDisplay extends Base {
 
 	log (msg) {
 		console.log(msg)
-		//const content = document.getElementById("content")
-		//content.innerHTML += " " + msg + "<br>\n"
 	}
 }
 

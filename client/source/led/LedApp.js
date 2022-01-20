@@ -43,16 +43,6 @@ class LedApp extends Base {
         */
         this.setT(this.t()+1)
     }
-
-    /*
-    render () {
-
-    }
-    */
-
-    didCompleteAnimation (anAnimation) {
-
-    }
     
     frameStep () {
         this.beginFrame()
@@ -174,7 +164,7 @@ class LedApp extends Base {
         }
     }
 
-    onClickLight (event, x, y) {
+    onClickLight (event, x, y) { // sent by HtmlDisplay
         /*
         const v = this.frame().getBit(x, y) ? 0 : 1
         this.setNeedsDisplay(true)
