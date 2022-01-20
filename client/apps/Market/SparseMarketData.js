@@ -13,44 +13,6 @@
 
 */
 
-Object.defineProperty(Array.prototype, "binarySearch", {
-	value: function (target, comparator) {
-		var l = 0,
-			h = this.length - 1,
-			m, comparison;
-		comparator = comparator || function (a, target) {
-			return (a < target ? -1 : (a > target ? 1 : 0));
-		};
-		while (l <= h) {
-			m = (l + h) >>> 1;
-			comparison = comparator(this[m], target);
-			if (comparison < 0) {
-				l = m + 1;
-			} else if (comparison > 0) {
-				h = m - 1;
-			} else {
-				return m;
-			}
-		}
-		return m; // nearest match?
-		//return~l;
-	}
-});
-
-Object.defineProperty(Array.prototype, "binaryInsert", {
-	value: function (target, duplicate, comparator) {
-		var i = this.binarySearch(target, comparator);
-		if (i >= 0) {
-			if (!duplicate) {
-				return i;
-			}
-		} else {
-			i = ~i;
-		}
-		this.splice(i, 0, target);
-		return i;
-	}
-});
 
 // -------------------------------------------------------
 

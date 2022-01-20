@@ -9,9 +9,76 @@ Object.defineSlots(String.prototype, {
             hash = hash & hash; // Convert to 32bit integer
         }
         return hash;
+    },
+
+    replaceAtIndex: function (i, newValue) {
+        if (i > this.length - 1) {
+            return this.slice()
+        }
+        return this.substring(0, i) + newValue + this.substring(i + 1)
+    },
+
+    contains: function (s) {
+        return this.indexOf(s) !== -1
     }
 })
 
+Object.defineSlots(Array.prototype, {
+    minValue: function () {
+        let minValue = Number.POSITIVE_INFINITY
+        this.forEach((v) => { if (v < minValue) { minValue = v } })
+        return minValue
+    },
+
+    maxValue: function () {
+        let maxValue = Number.NEGATIVE_INFINITY
+        this.forEach((v) => { if (v > maxValue) { maxValue = v } })
+        return maxValue
+    },
+
+    normalized: function () {
+        const minValue = this.minValue()
+        const maxValue = this.maxValue()
+        return this.map(v => (v - minValue) / (maxValue - minValue))
+    },
+
+    // -----------------
+
+    binarySearch: function (target, comparator) {
+        var l = 0,
+            h = this.length - 1,
+            m, comparison;
+        comparator = comparator || function (a, target) {
+            return (a < target ? -1 : (a > target ? 1 : 0));
+        };
+        while (l <= h) {
+            m = (l + h) >>> 1;
+            comparison = comparator(this[m], target);
+            if (comparison < 0) {
+                l = m + 1;
+            } else if (comparison > 0) {
+                h = m - 1;
+            } else {
+                return m;
+            }
+        }
+        return m; // nearest match?
+        //return~l;
+    },
+
+    binaryInsert: function (target, duplicate, comparator) {
+        var i = this.binarySearch(target, comparator);
+        if (i >= 0) {
+            if (!duplicate) {
+                return i;
+            }
+        } else {
+            i = ~i;
+        }
+        this.splice(i, 0, target);
+        return i;
+    }
+})
 
 
 Object.defineSlots(Uint8Array.prototype, {

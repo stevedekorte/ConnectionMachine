@@ -1,11 +1,5 @@
 "use strict"
 
-String.prototype.replaceAtIndex = function(i, newValue) {
-    if (i > this.length-1) {
-        return this.slice()
-    }
-    return this.substring(0, i) + newValue + this.substring(i + 1)}
-
 getGlobalThis().BrailleApp = class BrailleApp extends LedApp {
     constructor () {
         super()

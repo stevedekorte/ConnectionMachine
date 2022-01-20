@@ -4,23 +4,7 @@
     subclass this class to make custom Led apps
 */
 
-Array.prototype.minValue = function () {
-    let minValue = Number.POSITIVE_INFINITY
-    this.forEach((v) => { if (v < minValue) { minValue = v }})
-    return minValue
-}
 
-Array.prototype.maxValue = function () {
-    let maxValue = Number.NEGATIVE_INFINITY
-    this.forEach((v) => { if (v > maxValue) { maxValue = v }})
-    return maxValue
-}
-
-Array.prototype.normalized = function () {
-    const minValue = this.minValue()
-    const maxValue = this.maxValue()
-    return this.map(v => (v - minValue)/(maxValue - minValue))
-}
 
 getGlobalThis().MarketApp = class MarketApp extends LedApp {
     constructor () {

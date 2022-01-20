@@ -1,9 +1,5 @@
 "use strict"
 
-String.prototype.contains = function (s) {
-	return this.indexOf(s) != -1
-}
-
 getGlobalThis().DataTable = class DataTable extends Base {
 	constructor () {
 		super()
