@@ -14,6 +14,7 @@ getGlobalThis().BrailleApp = class BrailleApp extends LedApp {
         this.registerForKeyboardInput()
         //this.setAlwaysNeedsDisplay(false)
         this.newSlot("needsRender", false)
+        this.newSlot("isAutoWriting", true)
         this.setNeedsRender(true)
     }
 
@@ -93,6 +94,17 @@ getGlobalThis().BrailleApp = class BrailleApp extends LedApp {
             k = "!"
         }
 
+                
+        if (k === "a" && event.metaKey) {
+            this.setIsAutoWriting(!this.isAutoWriting())
+            return
+        }
+
+        if (event.key === "Escape") {
+            this.setText("")
+            return
+        }
+
         if (k.length) {
             this.appendText(k)
         }        
@@ -134,7 +146,9 @@ getGlobalThis().BrailleApp = class BrailleApp extends LedApp {
         }
 
         if (this.text().length < charsPerScreen || this.t() % 20 === 0) {
-            const s = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789            "
+            //const s = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789            "
+            const s = "    0123456789"
+            //const s = "BL1G   "
             //const s = "LAB"
             //const s = "CAKMXU"
             const c = s[Math.floor(Math.random() * s.length)]
@@ -153,7 +167,9 @@ getGlobalThis().BrailleApp = class BrailleApp extends LedApp {
     step () {
         super.step()
         
-        this.autoWrite()
+        if (this.isAutoWriting()) {
+            this.autoWrite()
+        }
 
         if (this.needsRender()) {
             this.render()
@@ -187,7 +203,7 @@ getGlobalThis().BrailleApp = class BrailleApp extends LedApp {
                 y += charHeight + vSpacing
             }
         }
-        //super.render()
+
         this.setNeedsDisplay(true)
     }
 

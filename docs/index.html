@@ -1,141 +1,185 @@
 <!doctype html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8">
-		<title>io about</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-		<link rel="stylesheet" href="home.css">
-		<link rel="stylesheet" href="home_header.css">
-		<link rel="stylesheet" href="about.css">
-		<link rel="stylesheet" href="fonts/Helvetica/fonts.css">
-		<style>
 
-			html, body {
-				height: 100%;
-				font-size: max(14px, 0.9vw);
-				/*font-size: min(2vh, 1vw);*/
-				width: auto;
-			}
+<head>
+	<meta charset="utf-8">
+	<title>io about</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="home.css">
+	<link rel="stylesheet" href="home_header.css">
+	<link rel="stylesheet" href="about.css">
+	<link rel="stylesheet" href="fonts/Helvetica/fonts.css">
+	<style>
+		html,
+		body {
+			height: 100%;
+			font-size: max(14px, 0.9vw);
+			/*font-size: min(2vh, 1vw);*/
+			width: auto;
+		}
 
-			.pageTitle {
-				font-size: 3em;
-			}
+		.pageTitle {
+			font-size: 3em;
+		}
 
-			.text {
-				margin-top: 3em;
-			}
+		.text {
+			margin-top: 3em;
+		}
 
-			a:link {
-				color: #999;
-			}
-			a:visited {
-				color: #999;
-			}
-			a:hover {
-				color: #888;
-			}
+		a:link {
+			color: #999;
+		}
 
-			.chunkLeft {
-				width: 5em;
-				color: #fff;
-			}
+		a:visited {
+			color: #999;
+		}
 
-			.chunkRight {
-				color: #ddd;
-			}
-        </style>
-	</head>
-	<body>
-		<div class="container leftSpace">
-		    <div class="header">
-            	<div class="pageHeader">
-			        <div class="topSpace"></div>
-					<div class="pageTitle" style="text-transform: none;">ConnectionMachine<span style="color: #333;">.fun</span></div>
-					<div class="pageSubtitle"> / about </div>
-			    </div>
+		a:hover {
+			color: #888;
+		}
+
+		.chunkLeft {
+			width: 3em;
+			color: #fff;
+		}
+
+		.chunkRight {
+			color: #ddd;
+		}
+
+		.description {
+			padding-bottom: 0em;
+		}
+
+		.photo {
+			display: inline-block;
+			width: 15em;
+			height: auto;
+			margin-top: 3em;
+			margin-bottom: 0em;
+			margin-right: 1em;
+			filter: grayscale(0.2);
+		}
+
+		.unknown {
+			font-style: italic;
+			color: red;
+		}
+
+		.indent {
+			margin-left: 1.5em;
+		}
+	</style>
+</head>
+
+<body>
+	<div class="container leftSpace">
+		<div class="header">
+			<div class="pageHeader">
+				<div class="topSpace"></div>
+				<div class="pageTitle" style="text-transform: none;">ConnectionMachine<span
+						style="color: #333;">.fun</span></div>
+				<div class="pageSubtitle"> / about </div>
 			</div>
-			<div class="text">
-			    <div class="description">
-                An open source <a href="https://en.wikipedia.org/wiki/Connection_Machine">CM2</a> inspired LED panel project.<br>
-				Board design by Jonathan Foote.<br>
+		</div>
+		<div class="text">
+			<div class="description" style="margin:0; padding:0;">
+				An open source <a href="https://en.wikipedia.org/wiki/Connection_Machine">CM2</a> inspired 32x32 LED panel wall art project.<br>
+				Design files and source code available on <a href="https://github.com/stevedekorte/ConnectionMachine">github</a>.<br>
+				Board design by <a href="https://stochasticlabs.org/portfolio/jon-foote/">Jonathan Foote</a>.<br>
 
-				<a href="media/board.jpg"><img src="media/board.jpg" style="width: 25em; height:auto; margin: 3em; filter: grayscale(0.2);"></a>
-				<!-- 
-				PCB board with a 32x32 LED grid driven by HT1632C chip controlled by Rhaspberry PI.<br>
-				Specs are open sourced here for other DIY. -->
-                </div>
-                <div class="items">
-
-                    <div class="chunk">
-                        <div class="chunkLeft">
-                            specs
-                        </div>
-                        <div class="chunkRight">
-							32x32 LED grid<br>
-							[board dimensions]<br>
-							<a href="../specs/hardware design/cm2-gerbers.zip">Gerbers PCB files</a><br>
-                        </div>
-                    </div>
+				<a href="media/photos/board.jpg"><img class="photo" src="media/photos/board.jpg"></a>
+				<a href="media/photos/wall.jpg"><img class="photo" src="media/photos/wall.jpg"></a>
+			</div>
+			<div class="items">
+				<div class="chunk">
 
 					<div class="chunk">
-                        <div class="chunkLeft">
-                            parts
-                        </div>
-                        <div class="chunkRight">
+						<div class="chunkLeft">
+							design
+						</div>
+						<div class="chunkRight">
+							<a href="specs/hardware design/cm2-gerbers.zip">Gerbers PCB files</a><br>
+							<a href="media/renders/one_side.png">rendering (one of two 16x32 LED panels)</a><br>
+						</div>
+					</div>
+
+
+					<div class="chunk">
+						<div class="chunkLeft">
+							parts
+						</div>
+						<div class="chunkRight">
 							1 &#215; BCM2835 - Rhaspberry PI 0 CPU chip<br>
-							1 &#215; HT1632C - LED driver chip<br>
-							1024 &#215; [XXX] LEDs<br>
-							1 &#215; [XXX] power supply
-                        </div>
-                    </div>
+							<span class="unknown">???</span> &#215; HT1632C - LED driver chip<br>
+							1024 &#215; <span class="unknown">???</span> LEDs<br>
+							1 &#215; <span class="unknown">???</span> power supply<br>
+							High-side buffer research, assume ULN2003 500mA low side:<br>
+							<div class="indent">
+							HEF40244B -- -25-35 mA<br>
+							74ACT11240 -- -25ma, max -50ma<br>
+							74VHC244 -- -25 mA<br>
+							SN74AHC244 -- 2003 datasheet say-25ma, website says -50<br>
+							SN74LV244A-EP -35mA Pinout -- yuck!<br>
+							SN74ABT541B<br>
+							CY74FCT16244T 16chan, max -60, expensive<br>
+							SN74ABT541B 8 chan, -32ma, good pinout<br>
+							</div>
+							Discrete P channel FETs:<br>
+							<div class="indent">
+							AOSS21115C<br>
+							AO3400<br>
+							FDG3616 -2x P-channel 700ma<br>
+							</div>
+						</div>
+					</div>
 
-<!-- 
-
-                    <div class="chunk">
-                        <div class="chunkLeft">
-                            design
-                        </div>
-                        <div class="chunkRight">
-							<a href="../specs/hardware design/cm2-gerbers.zip">Gerbers PCB files</a><br>
-							photos<br>
-                        </div>
-                    </div>
 
 					<div class="chunk">
-                        <div class="chunkLeft">
-                            enclosure
-                        </div>
-                        <div class="chunkRight">
-                            photos<br>
-                        </div>
-                    </div>
-				-->
-                    <div class="chunk">
-                        <div class="chunkLeft">
-                            server 
-                        </div>
-                        <div class="chunkRight">
-							python3 secure web sockets server<br>
+						<div class="chunkLeft">
+							frame
+						</div>
+						<div class="chunkRight">
+							frame: 26-1/2" x 26-1/2" (outside) modern deep black wood from <a href="https://pictureframes.com">pictureframes.com</a><br>
+							front panel: <!--26-7/8" x 26-7/8"--> Chemcast black LED acrylic, 1/8" thick with machined edges, from <a href="https://www.tapplastics.com">tapplastics.com</a>
+							<!-- ~$80 sans shipping --><br>
+							rear panel: <!--26-7/8" x 26-7/8"--> PVC dark gray, 1/8" thick with machined edges from <a href="https://www.tapplastics.com">tapplastics.com</a>
+							<!-- ~$50 sans shipping --><br>
+							<a href="https://www.amazon.com/gp/product/B07D7828LC/">PCB standoffs</a>,
+							<a href="https://www.amazon.com/gp/product/B08B65RZ44/">mounting bracket</a>,
+							<a href="https://www.amazon.com/gp/product/B076CPBM45/">wood screws</a>,
+							and <a href="https://www.amazon.com/gp/product/B09JJPBBN8/">cord</a>
+							 from <a href="https://amazon.com">amazon.com</a>
+						</div>
+					</div>
+
+					<div class="chunk">
+						<div class="chunkLeft">
+							server
+						</div>
+						<div class="chunkRight">
+							Python3 secure web sockets server<br>
 							receives json with hex framebuffer and brightness<br>
-							sends to HT1632C python3 binding<br>
-                        </div>
-                    </div>
-                    
-                    <div class="chunk">
-                        <div class="chunkLeft">
-                            client 
-                        </div>
-                        <div class="chunkRight">
-                            javascript in browser simulator<br>
-							sends websocket messages to server on LED panel if availible
-                        </div>
-                    </div>
-                   
+							sends to HT1632C Python3 binding<br>
+						</div>
+					</div>
+
+					<div class="chunk">
+						<div class="chunkLeft">
+							client
+						</div>
+						<div class="chunkRight">
+							Javascript in browser simulator<br>
+							websocket messages sent to server on LED panel if availible
+						</div>
+					</div>
+
 					<br>
 					<br>
 					<br>
 					<br>
 				</div>
-		</div>
-	</body>
+			</div>
+</body>
+
 </html>
