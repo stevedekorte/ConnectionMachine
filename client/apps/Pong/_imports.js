@@ -1,6 +1,9 @@
 
 ResourceLoader.pushRelativePaths([
     "../../_imports.js",
+    "Thing.js",
+    "Ball.js",
+    "Paddle.js",
     "PongApp.js",
 ]);
 

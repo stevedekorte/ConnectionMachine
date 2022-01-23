@@ -149,8 +149,8 @@ getGlobalThis().SparseMarketData = class SparseMarketData extends Base {
 		return bestEntry
 	}
 
-	//binarySearch 
 	entriesContainingDateRange(startDate, endDate) {
+		// as our entries are sorted by date, we can use binarySearch to quickly find first match 
 		// we want an overlapping entry with the smallest span
 		const series = this.series()
 		const matches = []

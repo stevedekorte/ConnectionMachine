@@ -18,7 +18,7 @@ getGlobalThis().CellularAutomataApp = class CellularAutomata extends LedApp {
 
     setupCaForRun () {
         const ca = this.ca()
-        //ca.mutateRules()
+        ca.mutateRules()
         ca.randomizeCells()
         ca.enforceCellStateSymmetry()
     }

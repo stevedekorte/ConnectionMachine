@@ -3,45 +3,43 @@
     "configurations": [
 
         {
-            "type": "chrome",
+            "type": "pwa-chrome",
             "request": "launch",
-            "name": "Launch Market app",
-            "url": "file:///${workspaceFolder}/apps/Market/index_incremental.html",
-            "webRoot": "${workspaceFolder}/apps/Market/"
+            "name": "Braille app",
+            "url": "file:///${workspaceFolder}/apps/Braille/index_incremental.html",
+            "webRoot": "${workspaceFolder}/apps/Braille/"
         },
-        
+
         {
             "type": "chrome",
             "request": "launch",
-            "name": "Launch Btc app",
+            "name": "Btc app",
             "url": "file:///${workspaceFolder}/apps/Btc/index_incremental.html",
             "webRoot": "${workspaceFolder}/apps/Btc/"
         },
 
         {
-            "type": "chrome",
+            "type": "pwa-chrome",
             "request": "launch",
-            "name": "Launch GameOfLife app",
-            "url": "file:///${workspaceFolder}/apps/GameOfLife/index_incremental.html",
-            "webRoot": "${workspaceFolder}/apps/GameOfLife/"
+            "name": "Clear app",
+            "url": "file:///${workspaceFolder}/apps/Clear/index_incremental.html",
+            "webRoot": "${workspaceFolder}/apps/Clear/"
         },
-
+    
 
         {
             "type": "chrome",
             "request": "launch",
-            "name": "Launch CellularAutomata app",
+            "name": "CellularAutomata app",
             "url": "file:///${workspaceFolder}/apps/CellularAutomata/index_incremental.html",
             "webRoot": "${workspaceFolder}/apps/CellularAutomata/"
         },
 
 
         {
-            //"type": "pwa-chrome",
             "type": "chrome",
-            //"type": "pwa-brave",
             "request": "launch",
-            "name": "Launch Equalizer app",
+            "name": "Equalizer app",
             //"url": "https://localhost:9000/apps/Equalizer/index_incremental.html",
             "url": "file:///${workspaceFolder}/apps/Equalizer/index_incremental.html",
             "runtimeArgs": [
@@ -50,21 +48,53 @@
             "webRoot": "${workspaceFolder}/apps/Equalizer/"
         },
 
-
         {
-            "type": "pwa-chrome",
+            "type": "chrome",
             "request": "launch",
-            "name": "Launch LightBright app",
-            "url": "file:///${workspaceFolder}/apps/LightBright/index_incremental.html",
-            "webRoot": "${workspaceFolder}/apps/LightBright/"
+            "name": "GameOfLife app",
+            "url": "file:///${workspaceFolder}/apps/GameOfLife/index_incremental.html",
+            "webRoot": "${workspaceFolder}/apps/GameOfLife/"
         },
 
         {
             "type": "pwa-chrome",
             "request": "launch",
-            "name": "Launch Braille app",
-            "url": "file:///${workspaceFolder}/apps/Braille/index_incremental.html",
-            "webRoot": "${workspaceFolder}/apps/Braille/"
+            "name": "LightBright app",
+            "url": "file:///${workspaceFolder}/apps/LightBright/index_incremental.html",
+            "webRoot": "${workspaceFolder}/apps/LightBright/"
+        },
+
+
+        {
+            "type": "chrome",
+            "request": "launch",
+            "name": "Market app",
+            "url": "file:///${workspaceFolder}/apps/Market/index_incremental.html",
+            "webRoot": "${workspaceFolder}/apps/Market/"
+        },
+
+        {
+            "type": "chrome",
+            "request": "launch",
+            "name": "Mainframe app",
+            "url": "file:///${workspaceFolder}/apps/Mainframe/index_incremental.html",
+            "webRoot": "${workspaceFolder}/apps/Mainframe/"
+        },
+
+        {
+            "type": "chrome",
+            "request": "launch",
+            "name": "Pong app",
+            "url": "file:///${workspaceFolder}/apps/Pong/index_incremental.html",
+            "webRoot": "${workspaceFolder}/apps/Pong/"
+        },
+
+        {
+            "type": "chrome",
+            "request": "launch",
+            "name": "Snowflake app",
+            "url": "file:///${workspaceFolder}/apps/Snowflake/index_incremental.html",
+            "webRoot": "${workspaceFolder}/apps/Snowflake/"
         },
 
         {
@@ -87,9 +117,9 @@
             "type": "node",
             "protocol": "inspector",
             "request": "launch",
-            "name": "Launch node server",
-            "cwd": "${workspaceFolder}/server",
-            "program": "${workspaceFolder}/server/server.js"
+            "name": "Run local https server",
+            "cwd": "${workspaceFolder}/local_web_server",
+            "program": "${workspaceFolder}/local_web_server/server.js"
         },
     ]
 }

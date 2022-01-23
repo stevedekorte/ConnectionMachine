@@ -4,22 +4,28 @@ getGlobalThis().PongApp = class PongApp extends LedApp {
     constructor () {
         super()
         this.setFps(3)
-        this._paddle1 = new Paddle()
-        this._paddle2 = new Paddle()
-        this._ball = new Ball()
-        this._objects = [this._paddle1, this._paddle2, this._ball]
+        this.newSlot("paddle1", new Paddle())
+        this.newSlot("paddle2", new Paddle())
+        this.newSlot("ball", new Ball())
+        this.newSlot("objects", [])
+        this.addObject(this.paddle1())
+        this.addObject(this.paddle2())
+        this.addObject(this.ball())
+    }
+
+    addObject (anObject) {
+        anObject.setParentObject(this)
+        this.objects().push(anObject)
+        return this
     }
 
     step () {
         super.step()
-        
-        this._objects.foreach(obj => obj.step())
-
+        this.objects().slice().forEach(obj => obj.step())
         this.render()
     }
 
     render () {
-        this._objects.foreach(obj => obj.render())
-
+        this.objects().forEach(obj => obj.render())
     }
 }

@@ -18,8 +18,6 @@ getGlobalThis().MarketApp = class MarketApp extends LedApp {
         this.newSlot("startDate",Date.parse("2011-01-01") )
         this.newSlot("endDate", null )
 
-
-
         //this.dataSource().connect()
 
         this.setFps(20)

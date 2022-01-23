@@ -154,7 +154,7 @@ class LedApp extends Base {
                 break;
         }
 
-        if (event.which === 32) { // space key
+        if (event.which === 32 && event.shiftKey) { // space key
             this.setIsPaused(!this.isPaused())
             if (this.isPaused()) {
                 this.cancelFrameStepTimeout()

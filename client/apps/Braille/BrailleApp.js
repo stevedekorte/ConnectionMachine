@@ -3,13 +3,20 @@
 getGlobalThis().BrailleApp = class BrailleApp extends LedApp {
     constructor () {
         super()
-        this.setFps(120)
+        this.setFps(100)
         this.newSlot("text", "") 
         this.registerForKeyboardInput()
         //this.setAlwaysNeedsDisplay(false)
         this.newSlot("needsRender", false)
-        this.newSlot("isAutoWriting", true)
+        this.newSlot("isAutoWriting", false)
         this.setNeedsRender(true)
+        this.newSlot("fullTextIndex", 0)
+
+        this.newSlot("charHeight", 3)
+        this.newSlot("charWidth", 2)
+        const margin = 0
+        this.newSlot("spacing", margin +1)
+        this.newSlot("vSpacing", margin +2)
     }
 
     /*
@@ -29,9 +36,11 @@ getGlobalThis().BrailleApp = class BrailleApp extends LedApp {
     */
 
     setText (s) {
-        if (this._text != s) {
+        if (this._text !== s) {
             this._text = s
+            console.log("setText: '" + this.text() + "'")
             this.setNeedsRender(true)
+            //this.setNeedsDisplay(true)
         }
        return this
     }
@@ -67,7 +76,7 @@ getGlobalThis().BrailleApp = class BrailleApp extends LedApp {
             return
         }
         
-        //console.log("k: '" + String.fromCharCode(event.which) + "' key:", event.key)
+        console.log("k: '" + String.fromCharCode(event.which) + "' key:", event.key)
         if (event.key === "Delete" || event.key === "Backspace") {
             this.onDeleteKey()
             return
@@ -100,12 +109,20 @@ getGlobalThis().BrailleApp = class BrailleApp extends LedApp {
         }
 
         if (k.length) {
+            if (!this.hasDataForChar(k)) {
+                console.log("no bitmap for character '" + k + "'")
+                return  
+            }
             this.appendText(k)
         }        
     }
 
     onKeyUp (event) {
         super.onKeyUp(event)
+    }
+
+    hasDataForChar (c) {
+        return typeof(this.dataForChar(c)) !== "undefined"
     }
 
     dataForChar (c) {
@@ -118,6 +135,10 @@ getGlobalThis().BrailleApp = class BrailleApp extends LedApp {
         // bottom left of character at x, y
         const data = this.dataForChar(c)
 
+        if (typeof(c) === "undefined") {
+            throw new Error("undefined character ", c) 
+        }
+
         if (data) {
             for (let y = 0; y < data.length; y++) {
                 const row = data[y]
@@ -128,20 +149,19 @@ getGlobalThis().BrailleApp = class BrailleApp extends LedApp {
                 }
             }
         } else {
-            console.log("no data for character '" + c + "'")
+            throw new Error("no data for character '" + c + "'") 
+
         }
     }
 
+    /*
     autoWrite () {
         const charsPerScreen = 180
-        
-        if (this.t() % 200 === 0) {
-            //this.clearText()
-        }
 
         if (this.text().length < charsPerScreen || this.t() % 20 === 0) {
             //const s = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789            "
-            const s = "    0123456789"
+            const s = "ATGC"
+            //const s = "    0123456789"
             //const s = "BL1G   "
             //const s = "LAB"
             //const s = "CAKMXU"
@@ -155,6 +175,46 @@ getGlobalThis().BrailleApp = class BrailleApp extends LedApp {
             } else {
                 this.appendText(c)
             }
+        }
+    }
+    */
+
+    charsPerScreen () {
+        const xmax = this.frame().width()
+        const ymax = this.frame().height()
+
+        let charHeight = this.charHeight()
+        let charWidth = this.charWidth()
+        let spacing = this.spacing()
+        let vSpacing = this.vSpacing()
+
+        const charsPerLine =  Math.ceil((xmax+spacing)/(charWidth+spacing))
+        const lines = Math.ceil((ymax+vSpacing)/(charHeight+vSpacing))
+        return charsPerLine * lines
+    }
+
+    autoWrite () {
+        const fullText = window.covidGenomeData
+        const i = this.fullTextIndex()
+        if (i < fullText.length) {
+            let newChar = fullText[i]
+            const index = "ATGC".indexOf(newChar)
+            //newChar = "DFHJ"[index]
+            //newChar = "123-"[index]
+            newChar = "BCDG"[index]
+            this.setText(this.text() + newChar)
+            this.setFullTextIndex(this.fullTextIndex()+1)
+            if (this.text().length > this.charsPerScreen()) {
+                this.setText(newChar)
+                /*
+                const chars = this.text().split("")
+                chars.shift()
+                this.setText(chars.join(""))
+                */
+            }
+        } else {
+            i = 0
+            this.setText("")
         }
     }
 
@@ -174,17 +234,20 @@ getGlobalThis().BrailleApp = class BrailleApp extends LedApp {
     render () {
         this.frame().clear()
 
+        console.log("rendering text: '" + this.text() + "'")
+
         const xmax = this.frame().width()
         const ymax = this.frame().height()
 
-        let charHeight = 3
-        let charWidth = 2
-        let spacing = 0
-        let vSpacing = 4
+        let charHeight = this.charHeight()
+        let charWidth = this.charWidth()
+        let spacing = this.spacing()
+        let vSpacing = this.vSpacing()
         let x = 0
         let y = charHeight
         for (let i = 0; i < this.text().length; i++) {
             const c = this.text()[i]
+
             if (c == "\n") {
                 x = 0
                 y += charHeight + vSpacing
@@ -197,9 +260,7 @@ getGlobalThis().BrailleApp = class BrailleApp extends LedApp {
                 y += charHeight + vSpacing
             }
         }
-
-        this.setNeedsDisplay(true)
+        this.setNeedsDisplay(false)
     }
-
 }
 
