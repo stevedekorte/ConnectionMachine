@@ -4,16 +4,24 @@ getGlobalThis().CellularAutomataApp = class CellularAutomata extends LedApp {
     constructor () {
         super()
         this.newSlot("ca", new CA())
-        this.setFps(1/10)
+        this.setFps(1)
+        this.setupCaForRun()
     }
 
     step () {
         super.step()
         this.frame().clear()
-        
-        this.setupCaForRun()
+
         this.renderRules()
         this.renderCaRun()
+
+        if (this.ca().hadLoop()) {
+            this.setupCaForRun()
+            this.setFps(100)
+        } else {
+            console.log("no loop found for ruleSet: ", this.ca().ruleString())
+            this.setFps(1/10)
+        }
     }
 
     setupCaForRun () {

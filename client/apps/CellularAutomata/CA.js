@@ -14,6 +14,11 @@ getGlobalThis().CA = class CA extends Base {
         // 00011110
 
 
+        // keep history so we can reset if loop detected
+        this.newSlot("hashHistory", [])
+        this.newSlot("maxHistory", 100000)
+        this.newSlot("hadLoop", false)
+
         this.newSlot("width", 32)
 
         // rules  
@@ -44,6 +49,25 @@ getGlobalThis().CA = class CA extends Base {
         this.randomizeRules()
         this.newSlot("cells", new Array(this.width()))
         this.restart()
+    }
+
+    checkForLoop () {
+        const hash = this.cells().join("").hashCode()
+        const matches = this.hashHistory().filter((h) => h == hash)
+        const isInLoop = matches.length != 0
+
+        this.hashHistory().push(hash)
+        while (this.hashHistory().length > this.maxHistory()) {
+            this.hashHistory().shift()
+        }
+
+        return isInLoop
+    }
+
+    clearHistory () {
+        this.setHashHistory([])
+        this.setHadLoop(false)
+        return this
     }
 
     enforceRuleSymmetries () {
@@ -138,6 +162,7 @@ getGlobalThis().CA = class CA extends Base {
             this._cells[i] = Math.round(Math.random())
             //this._cells[i] = Math.round(Math.random() * Math.random())
         }
+        this.clearHistory()
     }
 
     mutateCells() {
@@ -177,6 +202,10 @@ getGlobalThis().CA = class CA extends Base {
         }
         this._cells = nextgen
         this._generation += 1
+
+        if (this.checkForLoop()) {
+            this.setHadLoop(true)
+        }
     }
 }
 
