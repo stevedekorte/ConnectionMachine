@@ -7,7 +7,7 @@ getGlobalThis().GameOfLifeApp = class GameOfLifeApp extends LedApp {
         this.newSlot("ca", new CellularAutomata2d())
         this.ca().setupGameOfLifeRules()
         this.ca().setWidth(Math.floor(this.frame().width()))
-        this.ca().setHeight(Math.floor(this.frame().height()/5))
+        this.ca().setHeight(Math.floor(this.frame().height()))
     }
 
     /*
