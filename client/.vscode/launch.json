@@ -6,7 +6,7 @@
             "type": "pwa-chrome",
             "request": "launch",
             "name": "Braille app",
-            "url": "file:///${workspaceFolder}/apps/Braille/index_incremental.html",
+            "url": "file:///${workspaceFolder}/apps/Braille/index.html",
             "webRoot": "${workspaceFolder}/apps/Braille/"
         },
 
@@ -14,7 +14,7 @@
             "type": "chrome",
             "request": "launch",
             "name": "Btc app",
-            "url": "file:///${workspaceFolder}/apps/Btc/index_incremental.html",
+            "url": "file:///${workspaceFolder}/apps/Btc/index.html",
             "webRoot": "${workspaceFolder}/apps/Btc/"
         },
 
@@ -22,7 +22,7 @@
             "type": "pwa-chrome",
             "request": "launch",
             "name": "Clear app",
-            "url": "file:///${workspaceFolder}/apps/Clear/index_incremental.html",
+            "url": "file:///${workspaceFolder}/apps/Clear/index.html",
             "webRoot": "${workspaceFolder}/apps/Clear/"
         },
     
@@ -31,7 +31,7 @@
             "type": "chrome",
             "request": "launch",
             "name": "CellularAutomata app",
-            "url": "file:///${workspaceFolder}/apps/CellularAutomata/index_incremental.html",
+            "url": "file:///${workspaceFolder}/apps/CellularAutomata/index.html",
             "webRoot": "${workspaceFolder}/apps/CellularAutomata/"
         },
 
@@ -40,8 +40,8 @@
             "type": "chrome",
             "request": "launch",
             "name": "Equalizer app",
-            //"url": "https://localhost:9000/apps/Equalizer/index_incremental.html",
-            "url": "file:///${workspaceFolder}/apps/Equalizer/index_incremental.html",
+            //"url": "https://localhost:9000/apps/Equalizer/index.html",
+            "url": "file:///${workspaceFolder}/apps/Equalizer/index.html",
             "runtimeArgs": [
                 "--disable-web-security"
               ],
@@ -52,7 +52,7 @@
             "type": "chrome",
             "request": "launch",
             "name": "GameOfLife app",
-            "url": "file:///${workspaceFolder}/apps/GameOfLife/index_incremental.html",
+            "url": "file:///${workspaceFolder}/apps/GameOfLife/index.html",
             "webRoot": "${workspaceFolder}/apps/GameOfLife/"
         },
 
@@ -60,7 +60,7 @@
             "type": "pwa-chrome",
             "request": "launch",
             "name": "LightBright app",
-            "url": "file:///${workspaceFolder}/apps/LightBright/index_incremental.html",
+            "url": "file:///${workspaceFolder}/apps/LightBright/index.html",
             "webRoot": "${workspaceFolder}/apps/LightBright/"
         },
 
@@ -69,7 +69,7 @@
             "type": "chrome",
             "request": "launch",
             "name": "Market app",
-            "url": "file:///${workspaceFolder}/apps/Market/index_incremental.html",
+            "url": "file:///${workspaceFolder}/apps/Market/index.html",
             "webRoot": "${workspaceFolder}/apps/Market/"
         },
 
@@ -77,7 +77,7 @@
             "type": "chrome",
             "request": "launch",
             "name": "Mainframe app",
-            "url": "file:///${workspaceFolder}/apps/Mainframe/index_incremental.html",
+            "url": "file:///${workspaceFolder}/apps/Mainframe/index.html",
             "webRoot": "${workspaceFolder}/apps/Mainframe/"
         },
 
@@ -85,7 +85,7 @@
             "type": "chrome",
             "request": "launch",
             "name": "Pong app",
-            "url": "file:///${workspaceFolder}/apps/Pong/index_incremental.html",
+            "url": "file:///${workspaceFolder}/apps/Pong/index.html",
             "webRoot": "${workspaceFolder}/apps/Pong/"
         },
 
@@ -93,7 +93,7 @@
             "type": "chrome",
             "request": "launch",
             "name": "Snowflake app",
-            "url": "file:///${workspaceFolder}/apps/Snowflake/index_incremental.html",
+            "url": "file:///${workspaceFolder}/apps/Snowflake/index.html",
             "webRoot": "${workspaceFolder}/apps/Snowflake/"
         },
 
