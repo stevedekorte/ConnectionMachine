@@ -97,7 +97,7 @@ getGlobalThis().CA = class CA extends Base {
     enforceCellStateSymmetry () {
         const cells = this.cells()
         for (let i = 0; i < cells.length - 1; i++) {
-            cells[i] = cells[cells.length - 1 - i]
+            cells[cells.length - 1 - i] = cells[i] 
         }
         return this
     }
@@ -126,12 +126,19 @@ getGlobalThis().CA = class CA extends Base {
         this.genRuleDict()
     }
 
-    flipCellAt(i) {
+    flipCellAt (i) {
         if (this._cells[i] == 1) {
             this._cells[i] = 0
         } else {
             this._cells[i] = 1
         }
+        return this
+    }
+
+    flipOneCell () {
+        const i = Math.floor(Math.random() * this.cells().length)
+        this.flipCellAt(i)
+        return this
     }
 
     genRuleDict() {

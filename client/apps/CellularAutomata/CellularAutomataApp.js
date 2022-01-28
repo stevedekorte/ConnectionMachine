@@ -6,11 +6,14 @@ getGlobalThis().CellularAutomataApp = class CellularAutomata extends LedApp {
         this.newSlot("ca", new CA())
         this.setFps(1)
         this.setupCaForRun()
+        this.newSlot("cellsSnapshot", null) 
     }
 
     step () {
         super.step()
         this.frame().clear()
+
+        this.setCellsSnapshot(this.ca().cells().slice())
 
         this.renderRules()
         this.renderCaRun()
@@ -20,7 +23,16 @@ getGlobalThis().CellularAutomataApp = class CellularAutomata extends LedApp {
             this.setFps(100)
         } else {
             console.log("no loop found for ruleSet: ", this.ca().ruleString())
-            this.setFps(1/10)
+            this.setFps(1)
+            this.ca().setCells(this.cellsSnapshot())
+            //this.ca().flipOneCell()
+            const max = Math.floor(this.ca().width()/2)
+            this.ca().flipCellAt(this.t() % max)
+            if (this.t() % max === 0) {
+                this.ca().flipOneCell()
+            }
+            this.ca().clearHistory()
+            this.ca().enforceCellStateSymmetry()
         }
     }
 

@@ -12,12 +12,12 @@ function getGlobalThis() {
     }
 
 	if (typeof(window) !== 'undefined') {
-		window.global = window
+		window.global = window;
 		return window;
 	}
 
 	if (typeof(global) !== 'undefined') {
-		global.window = global
+		global.window = global;
 		return global;
 	}
 
@@ -28,4 +28,5 @@ function getGlobalThis() {
     
 	throw new Error('Unable to locate global `this`');
   };
+
   getGlobalThis().getGlobalThis = getGlobalThis;
