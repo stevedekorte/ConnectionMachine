@@ -9,6 +9,6 @@ For example, try opening:
 
 	client/apps/CellularAutomata/index.html
 	
-It will run the similutor in the browser, even if it can't talk to the LED display.
+It will run the similutor in your web browser, even if it can't open a web socket to the LED display.
 
-See docs folder for more details, if you'd like to build your own.
+See docs folder for more details, if you'd like to build your own LED display.

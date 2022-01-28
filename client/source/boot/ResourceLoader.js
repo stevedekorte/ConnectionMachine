@@ -325,7 +325,23 @@ class ResourceLoaderClass extends ResourceLoaderBase {
         return this
     }
 
-    loadUrl (url) {
+    loadUrl (aUrl) {
+        let url = aUrl
+        if (aUrl.indexOf("://") !== -1) {
+            console.log("loadUrl '" + aUrl + "'")
+            const pageUrl = window.location.href
+            let parts = pageUrl.split("/")
+            const lastPart = parts[parts.length-1]
+            console.log("lastPart: '" + lastPart + "'")
+            if (lastPart.indexOf(".html") !== -1) {
+                parts.pop()
+            }
+            let folderUrl = parts.join("/")
+            console.log("folderUrl '" + folderUrl + "'")
+            let url = folderUrl + "/" + aUrl 
+            console.log("url '" + url + "'")
+        }
+
         this.urlLoadingCallbacks().forEach(callback => callback(url, this._maxUrlCount))
 
         const extension = url.split(".").pop().toLowerCase()

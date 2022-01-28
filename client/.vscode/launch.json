@@ -39,6 +39,15 @@
         {
             "type": "chrome",
             "request": "launch",
+            "name": "CellularAutomata app remote",
+            "url": "https://cm2.fun/client/apps/CellularAutomata/index.html",
+            "webRoot": "${workspaceFolder}/apps/CellularAutomata/"
+        },
+
+
+        {
+            "type": "chrome",
+            "request": "launch",
             "name": "Equalizer app",
             //"url": "https://localhost:9000/apps/Equalizer/index.html",
             "url": "file:///${workspaceFolder}/apps/Equalizer/index.html",

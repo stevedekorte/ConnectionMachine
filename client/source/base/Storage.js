@@ -15,7 +15,7 @@ getGlobalThis().Storage = class Storage extends Base {
     indexedDB() {
         if (!this._indexedDB) {
             const g = getGlobalThis()
-            return g.indexedDB || g.mozIndexedDB || g.webkitIndexedDB || g.msIndexedDB || g.shimIndexedDB;
+            this._indexedDB = g.indexedDB || g.mozIndexedDB || g.webkitIndexedDB || g.msIndexedDB || g.shimIndexedDB;
         }
         return this._indexedDB
     }
