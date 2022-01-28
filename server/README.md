@@ -2,7 +2,6 @@
 
 ## CM2 panel Python software
 
-
 This is a simple http web socket server that 
 
 ```console
@@ -30,7 +29,9 @@ Example:
 }
 ```
 
-#configuration
+See the client code for details on the hex frame format. 
+
+# configuration
 
 You may need to edit the lines:
 
