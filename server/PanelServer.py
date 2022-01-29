@@ -2,11 +2,14 @@
 # you may need to install:
 # pip3 install websocket-server
 
+import sys, getopt
 import logging
 from websocket_server import WebsocketServer
 
 from Panel import Panel
 import json
+
+import socket
 
 
 class PanelServer(object):
@@ -15,14 +18,32 @@ class PanelServer(object):
 		self.host = "192.168.4.185"
 		self.port = 13254
 		self.server = None
+		self.isSecure = true
 		self.panel = Panel()
 		self.clientTally = 0
+		self.setup()
+
+	def setup ():
+		host_name = socket.gethostname()
+        host_ip = socket.gethostbyname(host_name)
+		self.setHost(host_ip)
+
+	def setIsSecure (aBoolean):
+		this.isSecure = bool(aBoolean)
+
+	def setHost (aString):
+		self.host = aStringv
+
+	def setPort (anInt):
+		self.port = int(anInt)
 
 	def run(self):
 		print("running on host " + self.host + " and port " + str(self.port))
 
-		server = WebsocketServer(host = self.host, port = self.port, key="key.pem", cert="cert.pem", loglevel = logging.ERROR)
-		//server = WebsocketServer(host = self.host, port = self.port, loglevel = logging.ERROR)
+		if isSecure:
+			server = WebsocketServer(host = self.host, port = self.port, loglevel = logging.ERROR, key="key.pem", cert="cert.pem", )
+		else:
+			server = WebsocketServer(host = self.host, port = self.port, loglevel = logging.ERROR)
 
 		server.set_fn_new_client(lambda client, server : self.onClientConnect(client, server) )
 		server.set_fn_client_left(lambda client, server : self.onClientDisconnect(client, server) )
@@ -71,6 +92,27 @@ class PanelServer(object):
 		self.server.send_message_to_all(message)
 
 
-if __name__ == "__main__":
+def main(argv):
+	help = 'PanelServer.py -host <hostname or address> -port <port number> -isSecure <true/false>'
 	panelServer = PanelServer()
+
+	try:
+		opts, args = getopt.getopt(argv,"",["help", "host=","port=", "isSecure="])
+	except getopt.GetoptError:
+		print (help)
+		sys.exit(2)
+
+	for opt, arg in opts:
+		if opt in ('-help'):
+			print (help)
+			sys.exit()
+		elif opt in ("-host"):
+			panelServer.setHost(arg)
+		elif opt in ("-port"):
+			panelServer.setPort(int(arg))
+		elif opt in ("-isSecure"):
+			panelServer.setIsSecure(arg == "true")
 	panelServer.run()
+
+if __name__ == "__main__":
+	main(sys.argv[1:])

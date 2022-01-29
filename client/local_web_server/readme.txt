@@ -1,4 +1,5 @@
 
+// -------------------------------------
 To generate a self-signed certificate, run the following in your shell:
 
 
@@ -6,6 +7,8 @@ openssl genrsa -out key.pem
 openssl req -new -key key.pem -out csr.pem
 openssl x509 -req -days 9999 -in csr.pem -signkey key.pem -out cert.pem
 rm csr.pem
+
+// -------------------------------------
 
 To run:
 
@@ -20,6 +23,7 @@ To use in chrome, you may need to do:
 
 chrome://flags/#allow-insecure-localhost
 
+// -------------------------------------
 
 
 /*
@@ -47,3 +51,26 @@ openssl req \
   -out "cert.crt"
 openssl x509 -noout -text -in "cert.crt"
 */
+
+// -------------------------------------
+
+
+To generate a self-signed certificate, run the following in your shell:
+
+
+openssl req \
+  -newkey rsa:2048 \
+  -x509 \
+  -new \
+  -nodes \
+  -keyout server.key \
+  -out server.crt  \
+  -subj /CN=test1   \
+  -sha256  \
+  -days 3650  \
+  -addext "subjectAltName = DNS:foo.co.uk,IP:127.0.0.1,IP:192.168.1.1" \
+  -addext "extendedKeyUsage = serverAuth"
+  
+  
+  
+  
