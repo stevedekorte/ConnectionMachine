@@ -19,8 +19,21 @@ class PanelServer(object):
 		self.server = None
 		self.isSecure = True
 		self.clientTally = 0
-		self.setup()
+		self.setHost(this.get_ip())
 		self.panel = Panel()
+
+	def get_ip(self):
+		s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+		s.settimeout(0)
+		try:
+			# doesn't even have to be reachable
+			s.connect(('10.255.255.255', 1))
+			IP = s.getsockname()[0]
+		except Exception:
+			IP = '127.0.0.1'
+		finally:
+			s.close()
+		return IP
 
 	def setup (self):
 		hostIp = socket.gethostbyname_ex(socket.gethostname())[-1][-1]
@@ -31,6 +44,7 @@ class PanelServer(object):
 		this.isSecure = bool(aBoolean)
 
 	def setHost (self, aString):
+		print("setHost: '" + aString + "'")
 		self.host = aString
 
 	def setPort (self, anInt):
