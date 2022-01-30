@@ -14,8 +14,7 @@ import socket
 
 class PanelServer(object):
 	def __init__(self):
-		#self.host = "cm2.local"
-		self.host = "192.168.4.185"
+		self.host = None
 		self.port = 13254
 		self.server = None
 		self.isSecure = True
