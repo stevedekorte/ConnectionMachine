@@ -24,9 +24,9 @@ class PanelServer(object):
 		self.setup()
 
 	def setup ():
-		host_name = socket.gethostname()
-        host_ip = socket.gethostbyname(host_name)
-		self.setHost(host_ip)
+		hostName = socket.gethostname()
+		hostIp = socket.gethostbyname(hostName)
+		self.setHost(hostIp)
 
 	def setIsSecure (aBoolean):
 		this.isSecure = bool(aBoolean)
