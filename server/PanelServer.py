@@ -40,7 +40,7 @@ class PanelServer(object):
 	def run(self):
 		print("running on host " + self.host + " and port " + str(self.port))
 
-		if isSecure:
+		if self.isSecure:
 			server = WebsocketServer(host = self.host, port = self.port, loglevel = logging.ERROR, key="key.pem", cert="cert.pem", )
 		else:
 			server = WebsocketServer(host = self.host, port = self.port, loglevel = logging.ERROR)
