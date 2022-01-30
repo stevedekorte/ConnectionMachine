@@ -25,6 +25,7 @@ class PanelServer(object):
 
 	def setup (self):
 		hostName = socket.gethostname()
+		print("hostName: '" + hostName + "'")
 		hostIp = socket.gethostbyname(hostName)
 		self.setHost(hostIp)
 
