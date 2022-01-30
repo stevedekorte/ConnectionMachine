@@ -18,7 +18,7 @@ class PanelServer(object):
 		self.host = "192.168.4.185"
 		self.port = 13254
 		self.server = None
-		self.isSecure = true
+		self.isSecure = True
 		self.panel = Panel()
 		self.clientTally = 0
 		self.setup()
@@ -32,7 +32,7 @@ class PanelServer(object):
 		this.isSecure = bool(aBoolean)
 
 	def setHost (aString):
-		self.host = aStringv
+		self.host = aString
 
 	def setPort (anInt):
 		self.port = int(anInt)
