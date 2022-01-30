@@ -19,7 +19,7 @@ class PanelServer(object):
 		self.server = None
 		self.isSecure = True
 		self.clientTally = 0
-		self.setHost(this.get_ip())
+		self.setHost(self.get_ip())
 		self.panel = Panel()
 
 	def get_ip(self):
