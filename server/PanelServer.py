@@ -19,14 +19,13 @@ class PanelServer(object):
 		self.port = 13254
 		self.server = None
 		self.isSecure = True
-		self.panel = Panel()
 		self.clientTally = 0
 		self.setup()
+		self.panel = Panel()
 
 	def setup (self):
-		hostName = socket.gethostname()
-		print("hostName: '" + hostName + "'")
-		hostIp = socket.gethostbyname(hostName)
+		hostIp = socket.gethostbyname_ex(socket.gethostname())[-1][-1]
+		print("hostIp: '" + hostIp + "'")
 		self.setHost(hostIp)
 
 	def setIsSecure (self, aBoolean):
