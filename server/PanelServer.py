@@ -37,7 +37,7 @@ class PanelServer(object):
 
 	def setup (self):
 		hostIp = socket.gethostbyname_ex(socket.gethostname())[-1][-1]
-		print("hostIp: '" + hostIp + "'")
+		# print("hostIp: '" + hostIp + "'")
 		self.setHost(hostIp)
 
 	def setIsSecure (self, aBoolean):
